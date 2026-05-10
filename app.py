@@ -173,6 +173,12 @@ def delete_user(user_id):
     conn.close()
     return jsonify({"message": "User deleted"})
 
+@app.route("/seed")
+def run_seed():
+    from seed import seed
+    seed()
+    return jsonify({"message": "Database seeded!"})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
