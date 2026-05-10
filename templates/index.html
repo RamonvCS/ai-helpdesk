@@ -4,205 +4,523 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IT Helpdesk AI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px}
+        body{background:#f8f9fb;height:100vh;display:grid;grid-template-rows:48px 1fr;overflow:hidden}
 
-        .topbar { background: #fff; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e7eb; }
-        .topbar-logo { font-size: 16px; font-weight: 600; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
-        .topbar-logo span { color: #2563eb; }
-        .badge { background: #dbeafe; color: #1d4ed8; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #2563eb; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+        /* TOPBAR */
+        .topbar{background:#fff;border-bottom:1px solid #e8eaed;display:flex;align-items:center;padding:0 16px;gap:12px;z-index:10}
+        .logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:#0a0a0a;min-width:180px}
+        .logo-mark{width:28px;height:28px;background:#0050b3;border-radius:6px;display:flex;align-items:center;justify-content:center}
+        .logo-mark i{font-size:15px;color:#fff}
+        .logo-text span{color:#0050b3}
+        .system-status{display:flex;align-items:center;gap:16px;flex:1;padding:0 16px}
+        .status-item{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b}
+        .status-dot{width:6px;height:6px;border-radius:50%}
+        .dot-green{background:#22c55e}
+        .dot-blue{background:#3b82f6}
+        .sep{color:#e2e5ea}
+        .topbar-right{display:flex;align-items:center;gap:8px}
+        .search{display:flex;align-items:center;gap:6px;background:#f5f6fa;border:1px solid #e8eaed;border-radius:6px;padding:5px 10px;width:220px}
+        .search i{font-size:14px;color:#94a3b8}
+        .search input{border:none;background:none;outline:none;font-size:12px;color:#0a0a0a;width:100%}
+        .icon-btn{width:28px;height:28px;border-radius:6px;border:1px solid #e8eaed;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+        .icon-btn i{font-size:15px;color:#64748b}
+        .badge-dot{position:absolute;top:3px;right:3px;width:6px;height:6px;background:#ef4444;border-radius:50%;border:1.5px solid #fff}
+        .avatar{width:28px;height:28px;border-radius:50%;background:#0050b3;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
 
-        .layout { display: grid; grid-template-columns: 200px 1fr; height: calc(100vh - 56px); }
+        /* BODY */
+        .body{display:grid;grid-template-columns:200px 1fr 300px;overflow:hidden;height:100%}
 
-        .sidebar { background: #fff; border-right: 1px solid #e5e7eb; padding: 16px 8px; }
-        .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; font-size: 13px; color: #6b7280; cursor: pointer; margin-bottom: 2px; }
-        .nav-item:hover { background: #f3f4f6; }
-        .nav-item.active { background: #dbeafe; color: #1d4ed8; font-weight: 500; }
-        .nav-section { font-size: 10px; color: #9ca3af; padding: 12px 12px 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+        /* SIDEBAR */
+        .sidebar{background:#fff;border-right:1px solid #e8eaed;display:flex;flex-direction:column;padding:12px 0;overflow-y:auto}
+        .nav-label{font-size:10px;color:#94a3b8;padding:10px 14px 3px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+        .nav-item{display:flex;align-items:center;gap:8px;padding:7px 14px;color:#475569;cursor:pointer;margin:1px 6px;border-radius:6px}
+        .nav-item i{font-size:15px}
+        .nav-item:hover{background:#f5f6fa}
+        .nav-item.active{background:#eff6ff;color:#0050b3;font-weight:500}
+        .nav-count{margin-left:auto;background:#ef4444;color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+        .sidebar-foot{margin-top:auto;padding:10px 14px;border-top:1px solid #e8eaed}
+        .user-card{display:flex;align-items:center;gap:8px}
+        .user-info p{font-size:12px;font-weight:500;color:#0a0a0a;margin:0;line-height:1.3}
+        .user-info span{font-size:10px;color:#94a3b8}
 
-        .main { padding: 24px; overflow-y: auto; }
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .page-title { font-size: 18px; font-weight: 600; }
+        /* MAIN */
+        .main{display:flex;flex-direction:column;overflow:hidden}
+        .main-top{background:#fff;border-bottom:1px solid #e8eaed;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+        .page-info p{font-size:10px;color:#94a3b8;margin-bottom:2px}
+        .page-info p span{color:#0050b3}
+        .page-info h1{font-size:15px;font-weight:600;color:#0a0a0a}
+        .actions{display:flex;gap:6px}
+        .btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;border:none}
+        .btn i{font-size:13px}
+        .btn-ghost{background:#fff;border:1px solid #e8eaed;color:#475569}
+        .btn-primary{background:#0050b3;color:#fff}
+        .btn-primary:hover{background:#003d8f}
 
-        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-        .metric-card { background: #fff; border-radius: 10px; padding: 16px; border: 1px solid #e5e7eb; }
-        .metric-label { font-size: 12px; color: #6b7280; margin-bottom: 6px; }
-        .metric-value { font-size: 28px; font-weight: 600; }
-        .metric-value.blue { color: #2563eb; }
-        .metric-value.green { color: #16a34a; }
-        .metric-value.amber { color: #d97706; }
+        /* CONTENT */
+        .content{padding:16px 18px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px}
 
-        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
-        .btn-primary { background: #2563eb; color: white; }
-        .btn-primary:hover { background: #1d4ed8; }
+        /* METRICS */
+        .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+        .metric{background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:12px 14px}
+        .metric-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+        .metric-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+        .metric-icon i{font-size:15px}
+        .mi-blue{background:#eff6ff;color:#0050b3}
+        .mi-green{background:#f0fdf4;color:#16a34a}
+        .mi-amber{background:#fffbeb;color:#d97706}
+        .mi-purple{background:#f5f3ff;color:#7c3aed}
+        .metric-label{font-size:10px;color:#94a3b8;margin-bottom:3px}
+        .metric-val{font-size:20px;font-weight:600;color:#0a0a0a;line-height:1}
+        .metric-sub{font-size:10px;color:#94a3b8;margin-top:4px}
+        .trend-up{color:#16a34a;font-weight:500}
+        .trend-down{color:#ef4444;font-weight:500}
 
-        .tickets-list { display: flex; flex-direction: column; gap: 10px; }
-        .ticket-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; cursor: pointer; transition: border-color 0.15s; }
-        .ticket-card:hover { border-color: #93c5fd; }
-        .ticket-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .ticket-id { font-size: 11px; color: #9ca3af; font-family: monospace; }
-        .ticket-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-        .ticket-meta { font-size: 12px; color: #6b7280; display: flex; gap: 16px; }
+        /* AI BANNER */
+        .ai-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px}
+        .ai-banner-icon{width:32px;height:32px;background:#dbeafe;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .ai-banner-icon i{font-size:16px;color:#0050b3}
+        .ai-banner-text p{font-size:11px;font-weight:500;color:#1e40af;margin-bottom:2px}
+        .ai-banner-text span{font-size:10px;color:#3b82f6}
+        .ai-chips{display:flex;gap:6px;margin-left:auto;flex-shrink:0}
+        .chip{padding:4px 10px;border-radius:20px;font-size:10px;font-weight:500;cursor:pointer;border:1px solid #bfdbfe;background:#fff;color:#0050b3;white-space:nowrap}
 
-        .priority { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-        .priority-high { background: #fee2e2; color: #dc2626; }
-        .priority-medium { background: #fef3c7; color: #d97706; }
-        .priority-low { background: #dcfce7; color: #16a34a; }
+        /* TICKETS */
+        .tickets-bar{display:flex;align-items:center;justify-content:space-between}
+        .filter-row{display:flex;gap:4px}
+        .pill{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:500;cursor:pointer;border:1px solid #e8eaed;background:#fff;color:#64748b}
+        .pill.on{background:#eff6ff;border-color:#bfdbfe;color:#0050b3}
+        .tickets-list{display:flex;flex-direction:column;gap:6px}
+        .ticket{background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:12px 14px;cursor:pointer;display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;transition:border-color .15s}
+        .ticket:hover{border-color:#93c5fd}
+        .ticket.sel{border-color:#0050b3;border-left:3px solid #0050b3}
+        .t-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .t-icon i{font-size:16px}
+        .ti-red{background:#fef2f2;color:#dc2626}
+        .ti-amber{background:#fffbeb;color:#d97706}
+        .ti-green{background:#f0fdf4;color:#16a34a}
+        .ti-blue{background:#eff6ff;color:#0050b3}
+        .t-id{font-size:10px;color:#94a3b8;font-family:monospace;margin-bottom:2px}
+        .t-title{font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:5px}
+        .t-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .t-meta span{font-size:10px;color:#94a3b8;display:flex;align-items:center;gap:3px}
+        .t-meta i{font-size:11px}
+        .t-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+        .sbadge{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.04em}
+        .sb-open{background:#dbeafe;color:#1e40af}
+        .sb-resolved{background:#dcfce7;color:#166534}
+        .sb-pending{background:#fef9c3;color:#854d0e}
+        .pbadge{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700}
+        .pb-high{background:#fee2e2;color:#991b1b}
+        .pb-med{background:#fef3c7;color:#92400e}
+        .pb-low{background:#dcfce7;color:#166534}
+        .ai-score{display:flex;align-items:center;gap:4px;font-size:10px;color:#7c3aed;font-weight:500}
+        .ai-score-bar{width:36px;height:4px;background:#ede9fe;border-radius:2px;overflow:hidden}
+        .ai-score-fill{height:100%;border-radius:2px;background:#7c3aed}
 
-        .status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
-        .status-open { background: #dbeafe; color: #1d4ed8; }
-        .status-resolved { background: #dcfce7; color: #16a34a; }
-        .status-pending { background: #fef3c7; color: #d97706; }
+        /* DETAIL PANEL */
+        .detail{background:#fff;border-left:1px solid #e8eaed;display:flex;flex-direction:column;overflow:hidden}
+        .detail-head{padding:14px;border-bottom:1px solid #e8eaed;flex-shrink:0}
+        .detail-head p{font-size:10px;color:#94a3b8;margin-bottom:4px}
+        .detail-head h2{font-size:13px;font-weight:600;color:#0a0a0a;margin-bottom:8px;line-height:1.4}
+        .detail-badges{display:flex;gap:5px;flex-wrap:wrap}
+        .detail-body{padding:14px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1}
+        .section-label{font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+        .timeline{display:flex;flex-direction:column}
+        .tl-item{display:flex;gap:8px;padding-bottom:12px;position:relative}
+        .tl-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
+        .tl-dot-blue{background:#0050b3}
+        .tl-dot-green{background:#16a34a}
+        .tl-dot-gray{background:#cbd5e1}
+        .tl-line{position:absolute;left:3.5px;top:10px;bottom:0;width:1px;background:#e8eaed}
+        .tl-text p{font-size:11px;color:#0a0a0a;font-weight:500;margin-bottom:1px}
+        .tl-text span{font-size:10px;color:#94a3b8}
+        .ai-suggest-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:7px;padding:10px}
+        .ai-suggest-label{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#6d28d9;margin-bottom:8px}
+        .ai-suggest-label i{font-size:12px}
+        .suggest-item{display:flex;align-items:flex-start;gap:6px;padding:6px 0;border-bottom:1px solid #ede9fe}
+        .suggest-item:last-child{border-bottom:none;padding-bottom:0}
+        .suggest-num{width:16px;height:16px;border-radius:50%;background:#7c3aed;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+        .suggest-text{font-size:11px;color:#4c1d95;line-height:1.5}
+        .suggest-text code{background:#ede9fe;padding:1px 4px;border-radius:3px;font-size:10px}
+        .empty-detail{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:#94a3b8;gap:8px}
+        .empty-detail i{font-size:32px;color:#e2e5ea}
 
-        .loading { text-align: center; color: #6b7280; padding: 40px; }
+        /* CHAT */
+        .chat-area{border-top:1px solid #e8eaed;padding:10px 14px;flex-shrink:0}
+        .chat-messages{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:120px;overflow-y:auto}
+        .chat-msg{padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5}
+        .chat-msg.ai{background:#f5f6fa;color:#0a0a0a}
+        .chat-msg.user{background:#0050b3;color:#fff;align-self:flex-end;max-width:80%}
+        .chat-label{font-size:10px;color:#94a3b8;font-weight:500;margin-bottom:6px}
+        .chat-input-row{display:flex;gap:6px}
+        .chat-input{flex:1;padding:7px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:11px;color:#0a0a0a;outline:none;background:#f8f9fb}
+        .chat-input:focus{border-color:#93c5fd}
+        .chat-send{padding:7px 12px;background:#0050b3;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
+        .chat-send i{font-size:13px}
+
+        /* MODAL */
+        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+        .modal{background:#fff;border-radius:10px;padding:20px;width:460px;max-width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+        .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        .modal-head h2{font-size:14px;font-weight:600;color:#0a0a0a}
+        .modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:#94a3b8;line-height:1}
+        .form-group{margin-bottom:12px}
+        .form-label{font-size:11px;color:#475569;font-weight:500;display:block;margin-bottom:4px}
+        .form-input{width:100%;padding:8px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:12px;color:#0a0a0a;outline:none;font-family:inherit}
+        .form-input:focus{border-color:#93c5fd}
+        textarea.form-input{resize:none}
+        .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+        .loading{text-align:center;padding:40px;color:#94a3b8}
     </style>
 </head>
 <body>
 
 <div class="topbar">
-    <div class="topbar-logo">🖥️ IT Helpdesk <span>AI</span></div>
-    <span class="badge">● AI Active</span>
-    <div class="avatar">RV</div>
+    <div class="logo">
+        <div class="logo-mark"><i class="ti ti-headset"></i></div>
+        <span class="logo-text">IT Helpdesk <span>AI</span></span>
+    </div>
+    <div class="system-status">
+        <div class="status-item"><div class="status-dot dot-green"></div> All systems operational</div>
+        <div class="sep">|</div>
+        <div class="status-item"><div class="status-dot dot-blue"></div> AI engine online</div>
+        <div class="sep">|</div>
+        <div class="status-item"><i class="ti ti-clock" style="font-size:11px;margin-right:2px"></i> Avg resolution: 4.2h</div>
+    </div>
+    <div class="topbar-right">
+        <div class="search"><i class="ti ti-search"></i><input type="text" placeholder="Search tickets..." /></div>
+        <div class="icon-btn"><i class="ti ti-bell"></i><div class="badge-dot"></div></div>
+        <div class="icon-btn"><i class="ti ti-settings"></i></div>
+        <div class="avatar">RV</div>
+    </div>
 </div>
 
-<div class="layout">
+<div class="body">
     <div class="sidebar">
-        <div class="nav-section">Main</div>
-        <div class="nav-item active">🎫 Tickets</div>
-        <div class="nav-item">🤖 AI Assistant</div>
-        <div class="nav-item">📊 Metrics</div>
-        <div class="nav-section">System</div>
-        <div class="nav-item">👥 Users</div>
-        <div class="nav-item">🖥️ Inventory</div>
-        <div class="nav-item">🔒 AD Access</div>
+        <div class="nav-label">Workspace</div>
+        <div class="nav-item active"><i class="ti ti-ticket"></i> Tickets <span class="nav-count" id="nav-count">—</span></div>
+        <div class="nav-item"><i class="ti ti-robot"></i> AI Assistant</div>
+        <div class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+        <div class="nav-label">System</div>
+        <div class="nav-item"><i class="ti ti-users"></i> Users</div>
+        <div class="nav-item"><i class="ti ti-server"></i> Inventory</div>
+        <div class="nav-item"><i class="ti ti-shield-lock"></i> AD Access</div>
+        <div class="nav-item"><i class="ti ti-file-report"></i> Reports</div>
+        <div class="nav-item"><i class="ti ti-activity"></i> Audit Log</div>
+        <div class="sidebar-foot">
+            <div class="user-card">
+                <div class="avatar" style="width:26px;height:26px;font-size:9px;flex-shrink:0">RV</div>
+                <div class="user-info"><p>Ramon Valentin</p><span>Level 2 — AbbVie</span></div>
+            </div>
+        </div>
     </div>
 
     <div class="main">
-        <div class="page-header">
-            <span class="page-title">Active Tickets</span>
-            <button class="btn btn-primary" onclick="openNewTicket()">+ New Ticket</button>
-        </div>
-
-        <div class="metrics">
-            <div class="metric-card">
-                <div class="metric-label">Total Tickets</div>
-                <div class="metric-value blue" id="total">—</div>
+        <div class="main-top">
+            <div class="page-info">
+                <p>Home / <span>Tickets</span></p>
+                <h1>Active Tickets</h1>
             </div>
-            <div class="metric-card">
-                <div class="metric-label">Open</div>
-                <div class="metric-value blue" id="open-count">—</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-label">Resolved</div>
-                <div class="metric-value green" id="resolved-count">—</div>
+            <div class="actions">
+                <button class="btn btn-ghost"><i class="ti ti-filter"></i> Filter</button>
+                <button class="btn btn-ghost"><i class="ti ti-download"></i> Export</button>
+                <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-plus"></i> New Ticket</button>
             </div>
         </div>
 
-        <div class="tickets-list" id="tickets-list">
-            <div class="loading">Loading tickets...</div>
+        <div class="content">
+            <div class="metrics">
+                <div class="metric">
+                    <div class="metric-top">
+                        <div><div class="metric-label">Total Tickets</div><div class="metric-val" id="m-total">—</div></div>
+                        <div class="metric-icon mi-blue"><i class="ti ti-ticket"></i></div>
+                    </div>
+                    <div class="metric-sub" id="m-total-sub">Loading...</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-top">
+                        <div><div class="metric-label">Open</div><div class="metric-val" id="m-open">—</div></div>
+                        <div class="metric-icon mi-blue"><i class="ti ti-folder-open"></i></div>
+                    </div>
+                    <div class="metric-sub" id="m-open-sub">Loading...</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-top">
+                        <div><div class="metric-label">Resolved</div><div class="metric-val" id="m-resolved">—</div></div>
+                        <div class="metric-icon mi-green"><i class="ti ti-check"></i></div>
+                    </div>
+                    <div class="metric-sub">AI assisted</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-top">
+                        <div><div class="metric-label">AI Accuracy</div><div class="metric-val">94%</div></div>
+                        <div class="metric-icon mi-purple"><i class="ti ti-brain"></i></div>
+                    </div>
+                    <div class="metric-sub"><span class="trend-up">+2%</span> this week</div>
+                </div>
+            </div>
+
+            <div class="ai-banner">
+                <div class="ai-banner-icon"><i class="ti ti-sparkles"></i></div>
+                <div class="ai-banner-text">
+                    <p>AI detected a pattern — multiple Outlook issues this week</p>
+                    <span>Possible root cause: O365 license sync after PC refresh</span>
+                </div>
+                <div class="ai-chips">
+                    <div class="chip">View pattern</div>
+                    <div class="chip">Auto-resolve</div>
+                </div>
+            </div>
+
+            <div class="tickets-bar">
+                <span style="font-size:12px;font-weight:500;color:#0a0a0a">All tickets</span>
+                <div class="filter-row">
+                    <div class="pill on" onclick="filterTickets('all', this)">All</div>
+                    <div class="pill" onclick="filterTickets('open', this)">Open</div>
+                    <div class="pill" onclick="filterTickets('pending', this)">Pending</div>
+                    <div class="pill" onclick="filterTickets('resolved', this)">Resolved</div>
+                </div>
+            </div>
+
+            <div class="tickets-list" id="tickets-list">
+                <div class="loading">Loading tickets...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail" id="detail-panel">
+        <div class="empty-detail" id="empty-detail">
+            <i class="ti ti-ticket"></i>
+            <span>Select a ticket to view details</span>
+        </div>
+        <div id="detail-content" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+            <div class="detail-head">
+                <p>Selected ticket</p>
+                <h2 id="d-title">—</h2>
+                <div class="detail-badges" id="d-badges"></div>
+            </div>
+            <div class="detail-body">
+                <div>
+                    <div class="section-label">Timeline</div>
+                    <div class="timeline">
+                        <div class="tl-item">
+                            <div class="tl-dot tl-dot-blue"></div>
+                            <div class="tl-line"></div>
+                            <div class="tl-text"><p>Ticket created</p><span id="tl-created">—</span></div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-dot tl-dot-green"></div>
+                            <div class="tl-line"></div>
+                            <div class="tl-text"><p>AI analysis complete</p><span>Instantly — AI Engine</span></div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-dot tl-dot-gray"></div>
+                            <div class="tl-text"><p>Assigned to technician</p><span>Ramon Valentin</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="section-label">AI Suggestions</div>
+                    <div class="ai-suggest-box" id="d-suggestions">
+                        <div class="ai-suggest-label"><i class="ti ti-sparkles"></i> Analyzing...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-area">
+                <div class="chat-label">Ask AI about this ticket</div>
+                <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-row">
+                    <input class="chat-input" id="chat-input" type="text" placeholder="Ask anything about this ticket..." onkeydown="if(event.key==='Enter')sendChat()" />
+                    <button class="chat-send" onclick="sendChat()"><i class="ti ti-send"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-head">
+            <h2>New Ticket</h2>
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input class="form-input" id="t-title" type="text" placeholder="Brief description of the issue">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-input" id="t-desc" rows="3" placeholder="Detailed description of the problem..."></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Priority</label>
+            <select class="form-input" id="t-priority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="submitTicket()"><i class="ti ti-plus"></i> Create Ticket</button>
         </div>
     </div>
 </div>
 
 <script>
+    let allTickets = [];
+    let selectedTicket = null;
+
+    const priorityIcons = {
+        high: {icon:'ti-alert-circle', cls:'ti-red'},
+        medium: {icon:'ti-alert-triangle', cls:'ti-amber'},
+        low: {icon:'ti-info-circle', cls:'ti-green'}
+    };
+
+    const aiSuggestions = {
+        high: [
+            "Check Azure AD sync status and force license reassignment in M365 admin portal",
+            "Run <code>outlook.exe /cleanprofile</code> to rebuild the Outlook profile",
+            "Verify device compliance in Intune — non-compliant devices block O365 activation"
+        ],
+        medium: [
+            "Restart the print spooler service: <code>net stop spooler && net start spooler</code>",
+            "Verify printer IP hasn't changed — check DHCP lease in network console",
+            "Reinstall printer driver using the manufacturer's latest package"
+        ],
+        low: [
+            "Reset password via Active Directory Users and Computers (ADUC)",
+            "Unlock account if locked: <code>Unlock-ADAccount -Identity username</code>",
+            "Verify user knows password complexity requirements before resetting"
+        ]
+    };
+
     async function loadTickets() {
-        const response = await fetch('/api/tickets');
-        const tickets = await response.json();
+        const res = await fetch('/api/tickets');
+        allTickets = await res.json();
+        renderTickets(allTickets);
+        updateMetrics(allTickets);
+    }
 
-        document.getElementById('total').textContent = tickets.length;
-        document.getElementById('open-count').textContent = tickets.filter(t => t.status === 'open').length;
-        document.getElementById('resolved-count').textContent = tickets.filter(t => t.status === 'resolved').length;
+    function updateMetrics(tickets) {
+        document.getElementById('m-total').textContent = tickets.length;
+        document.getElementById('m-open').textContent = tickets.filter(t=>t.status==='open').length;
+        document.getElementById('m-resolved').textContent = tickets.filter(t=>t.status==='resolved').length;
+        document.getElementById('nav-count').textContent = tickets.length;
+        const high = tickets.filter(t=>t.priority==='high'&&t.status==='open').length;
+        document.getElementById('m-total-sub').innerHTML = `<span class="trend-up">+${tickets.length}</span> total`;
+        document.getElementById('m-open-sub').innerHTML = high > 0 ? `<span class="trend-down">${high} high priority</span>` : 'All under control';
+    }
 
+    function renderTickets(tickets) {
         const list = document.getElementById('tickets-list');
-        list.innerHTML = tickets.map(ticket => `
-            <div class="ticket-card">
-                <div class="ticket-top">
-                    <span class="ticket-id">INC${String(ticket.id).padStart(4, '0')}</span>
-                    <span class="priority priority-${ticket.priority}">${ticket.priority}</span>
-                    <span class="status status-${ticket.status}">${ticket.status}</span>
+        if(tickets.length === 0){
+            list.innerHTML = '<div class="loading">No tickets found</div>';
+            return;
+        }
+        list.innerHTML = tickets.map(t => {
+            const pi = priorityIcons[t.priority] || priorityIcons.medium;
+            const score = t.priority==='high'?92:t.priority==='medium'?78:99;
+            return `
+            <div class="ticket ${selectedTicket?.id===t.id?'sel':''}" onclick="selectTicket(${t.id})">
+                <div class="t-icon ${pi.cls}"><i class="ti ${pi.icon}"></i></div>
+                <div>
+                    <div class="t-id">INC${String(t.id).padStart(4,'0')}</div>
+                    <div class="t-title">${t.title}</div>
+                    <div class="t-meta">
+                        <span><i class="ti ti-user"></i> ${t.user_name||'Unassigned'}</span>
+                        <span><i class="ti ti-clock"></i> ${new Date(t.created_at).toLocaleDateString()}</span>
+                        <div class="ai-score"><i class="ti ti-brain" style="font-size:11px"></i> ${score}%
+                            <div class="ai-score-bar"><div class="ai-score-fill" style="width:${score}%"></div></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="ticket-title">${ticket.title}</div>
-                <div class="ticket-meta">
-                    <span>👤 ${ticket.user_name}</span>
-                    <span>🕐 ${new Date(ticket.created_at).toLocaleDateString()}</span>
+                <div class="t-right">
+                    <span class="pbadge pb-${t.priority==='medium'?'med':t.priority}">${t.priority.toUpperCase()}</span>
+                    <span class="sbadge sb-${t.status}">${t.status.toUpperCase()}</span>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     }
 
-   function openNewTicket() {
-    document.getElementById('modal').style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('ticket-title').value = '';
-    document.getElementById('ticket-desc').value = '';
-}
-
-async function submitTicket() {
-    const title = document.getElementById('ticket-title').value.trim();
-    const description = document.getElementById('ticket-desc').value.trim();
-    const priority = document.getElementById('ticket-priority').value;
-
-    if (!title) {
-        alert('Title is required');
-        return;
+    function selectTicket(id) {
+        selectedTicket = allTickets.find(t=>t.id===id);
+        if(!selectedTicket) return;
+        renderTickets(allTickets);
+        document.getElementById('empty-detail').style.display = 'none';
+        const dc = document.getElementById('detail-content');
+        dc.style.display = 'flex';
+        document.getElementById('d-title').textContent = selectedTicket.title;
+        document.getElementById('tl-created').textContent = new Date(selectedTicket.created_at).toLocaleString() + ' — ' + (selectedTicket.user_name||'Unknown');
+        const score = selectedTicket.priority==='high'?92:selectedTicket.priority==='medium'?78:99;
+        document.getElementById('d-badges').innerHTML = `
+            <span class="pbadge pb-${selectedTicket.priority==='medium'?'med':selectedTicket.priority}">${selectedTicket.priority.toUpperCase()}</span>
+            <span class="sbadge sb-${selectedTicket.status}">${selectedTicket.status.toUpperCase()}</span>
+            <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:#f5f3ff;color:#6d28d9">AI ${score}%</span>
+        `;
+        const suggestions = aiSuggestions[selectedTicket.priority] || aiSuggestions.medium;
+        document.getElementById('d-suggestions').innerHTML = `
+            <div class="ai-suggest-label"><i class="ti ti-sparkles"></i> ${suggestions.length} solutions — confidence ${score}%</div>
+            ${suggestions.map((s,i)=>`
+                <div class="suggest-item">
+                    <div class="suggest-num">${i+1}</div>
+                    <div class="suggest-text">${s}</div>
+                </div>`).join('')}
+        `;
+        document.getElementById('chat-messages').innerHTML = `
+            <div class="chat-msg ai">Hello! I've analyzed INC${String(selectedTicket.id).padStart(4,'0')}. I found ${suggestions.length} potential solutions with ${score}% confidence. How can I help?</div>
+        `;
     }
 
-    const response = await fetch('/api/tickets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, priority })
-    });
-
-    if (response.ok) {
-        closeModal();
-        loadTickets();
+    function filterTickets(status, el) {
+        document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+        el.classList.add('on');
+        const filtered = status==='all' ? allTickets : allTickets.filter(t=>t.status===status);
+        renderTickets(filtered);
     }
-}
+
+    function sendChat() {
+        const input = document.getElementById('chat-input');
+        const msg = input.value.trim();
+        if(!msg || !selectedTicket) return;
+        const msgs = document.getElementById('chat-messages');
+        msgs.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+        input.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+        setTimeout(()=>{
+            msgs.innerHTML += `<div class="chat-msg ai">Based on the ticket context, I recommend checking the Azure AD sync status first. This is the most common cause for this type of issue in enterprise environments.</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+        }, 800);
+    }
+
+    function openModal() {
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('t-title').value = '';
+        document.getElementById('t-desc').value = '';
+    }
+
+    async function submitTicket() {
+        const title = document.getElementById('t-title').value.trim();
+        const description = document.getElementById('t-desc').value.trim();
+        const priority = document.getElementById('t-priority').value;
+        if(!title){ alert('Title is required'); return; }
+        const res = await fetch('/api/tickets', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({title, description, priority})
+        });
+        if(res.ok){ closeModal(); loadTickets(); }
+    }
 
     loadTickets();
 </script>
-
-
-<!-- Modal -->
-<div id="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:12px; padding:24px; width:480px; max-width:90%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="font-size:16px; font-weight:600;">New Ticket</h2>
-            <button onclick="closeModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#6b7280;">×</button>
-        </div>
-
-        <div style="display:flex; flex-direction:column; gap:14px;">
-            <div>
-                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Title *</label>
-                <input id="ticket-title" type="text" placeholder="Brief description of the issue" 
-                    style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none;">
-            </div>
-            <div>
-                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Description</label>
-                <textarea id="ticket-desc" placeholder="Detailed description..." rows="3"
-                    style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; resize:none;"></textarea>
-            </div>
-            <div>
-                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Priority</label>
-                <select id="ticket-priority" style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none;">
-                    <option value="low">Low</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </div>
-        </div>
-
-        <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
-            <button onclick="closeModal()" class="btn" style="background:#f3f4f6; color:#374151;">Cancel</button>
-            <button onclick="submitTicket()" class="btn btn-primary">Create Ticket</button>
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
