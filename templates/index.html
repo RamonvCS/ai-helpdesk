@@ -483,18 +483,29 @@
         renderTickets(filtered);
     }
 
-    function sendChat() {
+    async function sendChat() {
         const input = document.getElementById('chat-input');
         const msg = input.value.trim();
         if(!msg || !selectedTicket) return;
         const msgs = document.getElementById('chat-messages');
         msgs.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+        msgs.innerHTML += `<div class="chat-msg ai" id="typing">⟳ AI thinking...</div>`;
         input.value = '';
         msgs.scrollTop = msgs.scrollHeight;
-        setTimeout(()=>{
-            msgs.innerHTML += `<div class="chat-msg ai">Based on the ticket context, I recommend checking the Azure AD sync status first. This is the most common cause for this type of issue in enterprise environments.</div>`;
+        try {
+            const res = await fetch(`/api/tickets/${selectedTicket.id}/chat`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await res.json();
+            document.getElementById('typing').remove();
+            msgs.innerHTML += `<div class="chat-msg ai">${data.response}</div>`;
             msgs.scrollTop = msgs.scrollHeight;
-        }, 800);
+        } catch(err) {
+            document.getElementById('typing').remove();
+            msgs.innerHTML += `<div class="chat-msg ai">Error connecting to AI. Please try again.</div>`;
+        }
     }
 
     function openModal() {
