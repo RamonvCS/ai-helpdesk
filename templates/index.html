@@ -132,12 +132,77 @@
         `).join('');
     }
 
-    function openNewTicket() {
-        alert('New ticket form — coming in next task!');
+   function openNewTicket() {
+    document.getElementById('modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('ticket-title').value = '';
+    document.getElementById('ticket-desc').value = '';
+}
+
+async function submitTicket() {
+    const title = document.getElementById('ticket-title').value.trim();
+    const description = document.getElementById('ticket-desc').value.trim();
+    const priority = document.getElementById('ticket-priority').value;
+
+    if (!title) {
+        alert('Title is required');
+        return;
     }
+
+    const response = await fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, description, priority })
+    });
+
+    if (response.ok) {
+        closeModal();
+        loadTickets();
+    }
+}
 
     loadTickets();
 </script>
+
+
+<!-- Modal -->
+<div id="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:24px; width:480px; max-width:90%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="font-size:16px; font-weight:600;">New Ticket</h2>
+            <button onclick="closeModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color:#6b7280;">×</button>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:14px;">
+            <div>
+                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Title *</label>
+                <input id="ticket-title" type="text" placeholder="Brief description of the issue" 
+                    style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none;">
+            </div>
+            <div>
+                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Description</label>
+                <textarea id="ticket-desc" placeholder="Detailed description..." rows="3"
+                    style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; resize:none;"></textarea>
+            </div>
+            <div>
+                <label style="font-size:12px; color:#6b7280; display:block; margin-bottom:4px;">Priority</label>
+                <select id="ticket-priority" style="width:100%; padding:8px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none;">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
+            <button onclick="closeModal()" class="btn" style="background:#f3f4f6; color:#374151;">Cancel</button>
+            <button onclick="submitTicket()" class="btn btn-primary">Create Ticket</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
