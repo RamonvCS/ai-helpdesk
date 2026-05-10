@@ -27,7 +27,7 @@
         .icon-btn i{font-size:15px;color:#64748b}
         .badge-dot{position:absolute;top:3px;right:3px;width:6px;height:6px;background:#ef4444;border-radius:50%;border:1.5px solid #fff}
         .avatar{width:28px;height:28px;border-radius:50%;background:#0050b3;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
-        .body{display:grid;grid-template-columns:200px 1fr 300px;overflow:hidden;height:100%}
+        .body{display:grid;grid-template-columns:200px 1fr 320px;overflow:hidden;height:100%}
         .sidebar{background:#fff;border-right:1px solid #e8eaed;display:flex;flex-direction:column;padding:12px 0;overflow-y:auto}
         .nav-label{font-size:10px;color:#94a3b8;padding:10px 14px 3px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
         .nav-item{display:flex;align-items:center;gap:8px;padding:7px 14px;color:#475569;cursor:pointer;margin:1px 6px;border-radius:6px}
@@ -104,18 +104,31 @@
         .ai-score-bar{width:36px;height:4px;background:#ede9fe;border-radius:2px;overflow:hidden}
         .ai-score-fill{height:100%;border-radius:2px;background:#7c3aed}
         .detail{background:#fff;border-left:1px solid #e8eaed;display:flex;flex-direction:column;overflow:hidden}
-        .detail-head{padding:14px;border-bottom:1px solid #e8eaed;flex-shrink:0}
-        .detail-head p{font-size:10px;color:#94a3b8;margin-bottom:4px}
-        .detail-head h2{font-size:13px;font-weight:600;color:#0a0a0a;margin-bottom:8px;line-height:1.4}
-        .detail-badges{display:flex;gap:5px;flex-wrap:wrap}
-        .detail-body{padding:14px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1}
-        .section-label{font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+        .detail-tabs{display:flex;border-bottom:1px solid #e8eaed;flex-shrink:0}
+        .detail-tab{flex:1;padding:10px;text-align:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent}
+        .detail-tab.active{color:#0050b3;border-bottom-color:#0050b3}
+        .tab-content{display:none;flex-direction:column;flex:1;overflow:hidden}
+        .tab-content.active{display:flex}
+        .user-info-card{background:#f8f9fb;border:1px solid #e8eaed;border-radius:8px;padding:12px;margin:12px 14px 0}
+        .user-info-card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+        .user-avatar-lg{width:36px;height:36px;border-radius:50%;background:#0050b3;color:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .user-info-name{font-size:13px;font-weight:600;color:#0a0a0a}
+        .user-info-role{font-size:10px;color:#94a3b8}
+        .user-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .user-info-item{font-size:10px;color:#64748b;display:flex;align-items:center;gap:4px}
+        .user-info-item i{font-size:12px;color:#94a3b8}
+        .ticket-detail-body{padding:12px 14px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+        .section-label{font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+        .detail-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
+        .status-actions{display:flex;gap:5px;flex-wrap:wrap;padding-top:8px;border-top:1px solid #e8eaed;margin-top:6px}
+        .ticket-desc{font-size:11px;color:#475569;line-height:1.6;background:#f8f9fb;border-radius:6px;padding:8px 10px}
         .timeline{display:flex;flex-direction:column}
-        .tl-item{display:flex;gap:8px;padding-bottom:12px;position:relative}
+        .tl-item{display:flex;gap:8px;padding-bottom:10px;position:relative}
         .tl-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
         .tl-dot-blue{background:#0050b3}
         .tl-dot-green{background:#16a34a}
         .tl-dot-gray{background:#cbd5e1}
+        .tl-dot-amber{background:#d97706}
         .tl-line{position:absolute;left:3.5px;top:10px;bottom:0;width:1px;background:#e8eaed}
         .tl-text p{font-size:11px;color:#0a0a0a;font-weight:500;margin-bottom:1px}
         .tl-text span{font-size:10px;color:#94a3b8}
@@ -127,19 +140,28 @@
         .suggest-num{width:16px;height:16px;border-radius:50%;background:#7c3aed;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
         .suggest-text{font-size:11px;color:#4c1d95;line-height:1.5}
         .suggest-text code{background:#ede9fe;padding:1px 4px;border-radius:3px;font-size:10px}
-        .empty-detail{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:#94a3b8;gap:8px}
-        .empty-detail i{font-size:32px;color:#e2e5ea}
+        .comments-list{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+        .comment{background:#f8f9fb;border:1px solid #e8eaed;border-radius:8px;padding:10px 12px}
+        .comment-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+        .comment-author{font-size:11px;font-weight:600;color:#0a0a0a;display:flex;align-items:center;gap:6px}
+        .comment-author-dot{width:20px;height:20px;border-radius:50%;background:#0050b3;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center}
+        .comment-time{font-size:10px;color:#94a3b8}
+        .comment-text{font-size:11px;color:#475569;line-height:1.5}
+        .comment-input-area{padding:10px 14px;border-top:1px solid #e8eaed;flex-shrink:0}
+        .comment-input{width:100%;padding:8px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:11px;color:#0a0a0a;outline:none;resize:none;font-family:inherit;background:#f8f9fb}
+        .comment-actions{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+        .comment-hint{font-size:10px;color:#94a3b8}
         .chat-area{border-top:1px solid #e8eaed;padding:10px 14px;flex-shrink:0}
-        .chat-messages{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:120px;overflow-y:auto}
+        .chat-messages{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;max-height:200px;overflow-y:auto}
         .chat-msg{padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5}
         .chat-msg.ai{background:#f5f6fa;color:#0a0a0a}
-        .chat-msg.user{background:#0050b3;color:#fff;align-self:flex-end;max-width:80%}
+        .chat-msg.user{background:#0050b3;color:#fff;align-self:flex-end;max-width:85%}
         .chat-label{font-size:10px;color:#94a3b8;font-weight:500;margin-bottom:6px}
         .chat-input-row{display:flex;gap:6px}
         .chat-input{flex:1;padding:7px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:11px;color:#0a0a0a;outline:none;background:#f8f9fb}
-        .chat-input:focus{border-color:#93c5fd}
         .chat-send{padding:7px 12px;background:#0050b3;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px}
-        .chat-send i{font-size:13px}
+        .empty-detail{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:#94a3b8;gap:8px}
+        .empty-detail i{font-size:32px;color:#e2e5ea}
         .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
         .modal{background:#fff;border-radius:10px;padding:20px;width:460px;max-width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
         .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
@@ -152,6 +174,17 @@
         textarea.form-input{resize:none}
         .modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
         .loading{text-align:center;padding:40px;color:#94a3b8}
+        .fs-meta-item label{font-size:10px;color:#94a3b8;display:block;margin-bottom:3px}
+        .fs-meta-item p{font-size:12px;color:#0a0a0a;font-weight:500}
+        .asset-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f1f5f9}
+        .asset-row:last-child{border-bottom:none;padding-bottom:0}
+        .asset-icon{width:28px;height:28px;border-radius:6px;background:#eff6ff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .asset-icon i{font-size:14px;color:#0050b3}
+        .asset-name{font-size:12px;font-weight:500;color:#0a0a0a}
+        .asset-tag{font-size:10px;color:#94a3b8}
+        .asset-status-badge{margin-left:auto;font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+        .asset-active{background:#dcfce7;color:#166534}
+        .asset-inactive{background:#fee2e2;color:#991b1b}
     </style>
 </head>
 <body>
@@ -190,13 +223,12 @@
         <div class="sidebar-foot">
             <div class="user-card">
                 <div class="avatar" style="width:26px;height:26px;font-size:9px;flex-shrink:0">RV</div>
-                <div class="user-info"><p>Ramon Valentin</p><span>Level 2 — AbbVie</span></div>
+                <div class="user-info"><p>Ramon Valentin</p><span>Level 2 — NovaTech</span></div>
             </div>
         </div>
     </div>
 
     <div class="main">
-        <!-- TICKETS HEADER -->
         <div class="main-top" id="tickets-header">
             <div class="page-info">
                 <p>Home / <span>Tickets</span></p>
@@ -208,8 +240,6 @@
                 <button class="btn btn-primary" onclick="openModal()"><i class="ti ti-plus"></i> New Ticket</button>
             </div>
         </div>
-
-        <!-- USERS HEADER -->
         <div class="main-top" id="users-header" style="display:none">
             <div class="page-info">
                 <p>Home / <span>Users</span></p>
@@ -221,48 +251,32 @@
         </div>
 
         <div class="content">
-            <!-- TICKETS VIEW -->
             <div id="tickets-view" style="display:flex;flex-direction:column;gap:14px">
                 <div class="metrics">
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Total Tickets</div><div class="metric-val" id="m-total">—</div></div>
-                            <div class="metric-icon mi-blue"><i class="ti ti-ticket"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Total Tickets</div><div class="metric-val" id="m-total">—</div></div><div class="metric-icon mi-blue"><i class="ti ti-ticket"></i></div></div>
                         <div class="metric-sub" id="m-total-sub">Loading...</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Open</div><div class="metric-val" id="m-open">—</div></div>
-                            <div class="metric-icon mi-blue"><i class="ti ti-folder-open"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Open</div><div class="metric-val" id="m-open">—</div></div><div class="metric-icon mi-blue"><i class="ti ti-folder-open"></i></div></div>
                         <div class="metric-sub" id="m-open-sub">Loading...</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Resolved</div><div class="metric-val" id="m-resolved">—</div></div>
-                            <div class="metric-icon mi-green"><i class="ti ti-check"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Resolved</div><div class="metric-val" id="m-resolved">—</div></div><div class="metric-icon mi-green"><i class="ti ti-check"></i></div></div>
                         <div class="metric-sub">AI assisted</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">AI Accuracy</div><div class="metric-val">94%</div></div>
-                            <div class="metric-icon mi-purple"><i class="ti ti-brain"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">AI Accuracy</div><div class="metric-val">94%</div></div><div class="metric-icon mi-purple"><i class="ti ti-brain"></i></div></div>
                         <div class="metric-sub"><span class="trend-up">+2%</span> this week</div>
                     </div>
                 </div>
                 <div class="ai-banner">
                     <div class="ai-banner-icon"><i class="ti ti-sparkles"></i></div>
                     <div class="ai-banner-text">
-                        <p>AI detected a pattern — multiple Outlook issues this week</p>
-                        <span>Possible root cause: O365 license sync after PC refresh</span>
+                        <p>AI detected a pattern — multiple connectivity issues this week
+                        <span>Possible root cause: O365 license sync after system update
                     </div>
-                    <div class="ai-chips">
-                        <div class="chip">View pattern</div>
-                        <div class="chip">Auto-resolve</div>
-                    </div>
+                    <div class="ai-chips"><div class="chip">View pattern</div><div class="chip">Auto-resolve</div></div>
                 </div>
                 <div class="tickets-bar">
                     <span style="font-size:12px;font-weight:500;color:#0a0a0a">All tickets</span>
@@ -273,49 +287,30 @@
                         <div class="pill" onclick="filterTickets('resolved', this)">Resolved</div>
                     </div>
                 </div>
-                <div class="tickets-list" id="tickets-list">
-                    <div class="loading">Loading tickets...</div>
-                </div>
+                <div class="tickets-list" id="tickets-list"><div class="loading">Loading tickets...</div></div>
             </div>
 
-            <!-- USERS VIEW -->
             <div id="users-view" style="display:none;flex-direction:column;gap:14px">
                 <div class="metrics">
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Total Users</div><div class="metric-val" id="m-users">—</div></div>
-                            <div class="metric-icon mi-blue"><i class="ti ti-users"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Total Users</div><div class="metric-val" id="m-users">—</div></div><div class="metric-icon mi-blue"><i class="ti ti-users"></i></div></div>
                         <div class="metric-sub">Active accounts</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Technicians</div><div class="metric-val" id="m-techs">—</div></div>
-                            <div class="metric-icon mi-purple"><i class="ti ti-tool"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Technicians</div><div class="metric-val" id="m-techs">—</div></div><div class="metric-icon mi-purple"><i class="ti ti-tool"></i></div></div>
                         <div class="metric-sub">IT staff</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">End Users</div><div class="metric-val" id="m-endusers">—</div></div>
-                            <div class="metric-icon mi-green"><i class="ti ti-user"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">End Users</div><div class="metric-val" id="m-endusers">—</div></div><div class="metric-icon mi-green"><i class="ti ti-user"></i></div></div>
                         <div class="metric-sub">Reporting issues</div>
                     </div>
                     <div class="metric">
-                        <div class="metric-top">
-                            <div><div class="metric-label">Avg Tickets</div><div class="metric-val" id="m-avg">—</div></div>
-                            <div class="metric-icon mi-amber"><i class="ti ti-chart-bar"></i></div>
-                        </div>
+                        <div class="metric-top"><div><div class="metric-label">Avg Tickets</div><div class="metric-val" id="m-avg">—</div></div><div class="metric-icon mi-amber"><i class="ti ti-chart-bar"></i></div></div>
                         <div class="metric-sub">Per user</div>
                     </div>
                 </div>
-                <div class="tickets-bar">
-                    <span style="font-size:12px;font-weight:500;color:#0a0a0a">All users</span>
-                </div>
-                <div class="tickets-list" id="users-content">
-                    <div class="loading">Loading users...</div>
-                </div>
+                <div class="tickets-bar"><span style="font-size:12px;font-weight:500;color:#0a0a0a">All users</span></div>
+                <div class="tickets-list" id="users-content"><div class="loading">Loading users...</div></div>
             </div>
         </div>
     </div>
@@ -326,44 +321,174 @@
             <span>Select a ticket to view details</span>
         </div>
         <div id="detail-content" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-            <div class="detail-head">
-                <p>Selected ticket</p>
-                <h2 id="d-title">—</h2>
-                <div class="detail-badges" id="d-badges"></div>
+            <div class="detail-tabs">
+                <div class="detail-tab active" onclick="switchTab('info')"><i class="ti ti-info-circle" style="font-size:13px;margin-right:4px"></i>Info</div>
+                <div class="detail-tab" onclick="switchTab('comments')"><i class="ti ti-message" style="font-size:13px;margin-right:4px"></i>Notes</div>
+                <div class="detail-tab" onclick="switchTab('ai')"><i class="ti ti-robot" style="font-size:13px;margin-right:4px"></i>AI Chat</div>
             </div>
-            <div class="detail-body">
-                <div>
-                    <div class="section-label">Timeline</div>
+            <div class="tab-content active" id="tab-info" style="flex-direction:column;overflow:hidden">
+                <div class="user-info-card">
+                    <div class="user-info-card-top">
+                        <div class="user-avatar-lg" id="d-user-initials">—</div>
+                        <div>
+                            <div class="user-info-name" id="d-user-name">—</div>
+                            <div class="user-info-role" id="d-user-role">—</div>
+                        </div>
+                    </div>
+                    <div class="user-info-grid">
+                        <div class="user-info-item"><i class="ti ti-mail"></i><span id="d-user-email">—</span></div>
+                        <div class="user-info-item"><i class="ti ti-ticket"></i><span id="d-user-tickets">—</span></div>
+                    </div>
+                </div>
+                <div class="ticket-detail-body">
+                    <div>
+                        <div class="section-label">Ticket</div>
+                        <div class="detail-badges" id="d-badges"></div>
+                        <div class="status-actions" id="status-actions"></div>
+                    </div>
+                    <div>
+                        <div class="section-label">Description</div>
+                        <div class="ticket-desc" id="d-description">—</div>
+                    </div>
+                    <div>
+                        <div class="section-label">Timeline</div>
+                        <div class="timeline">
+                            <div class="tl-item"><div class="tl-dot tl-dot-blue"></div><div class="tl-line"></div><div class="tl-text"><p>Ticket created</p><span id="tl-created">—</span></div></div>
+                            <div class="tl-item"><div class="tl-dot tl-dot-green"></div><div class="tl-line"></div><div class="tl-text"><p>AI analysis complete</p><span>Instantly — AI Engine</span></div></div>
+                            <div class="tl-item"><div class="tl-dot tl-dot-amber"></div><div class="tl-text"><p>Last updated</p><span id="tl-updated-time">—</span></div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="section-label">AI Suggestions</div>
+                        <div class="ai-suggest-box" id="d-suggestions"><div class="ai-suggest-label"><i class="ti ti-sparkles"></i> Analyzing...</div></div>
+                    </div>
+                    <div style="text-align:center;padding-top:4px">
+                        <button onclick="openFS(selectedTicket.id)" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0050b3;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer">
+                            <i class="ti ti-arrows-maximize" style="font-size:13px"></i> Open Full Detail
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-comments" style="flex-direction:column;overflow:hidden">
+                <div class="comments-list" id="comments-list"><div class="loading">Loading notes...</div></div>
+                <div class="comment-input-area">
+                    <textarea class="comment-input" id="comment-input" rows="3" placeholder="Add a technician note..."></textarea>
+                    <div class="comment-actions">
+                        <span class="comment-hint">Internal — not visible to users</span>
+                        <button class="btn btn-primary" onclick="addComment()" style="font-size:11px;padding:5px 12px"><i class="ti ti-send"></i> Post Note</button>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="tab-ai" style="flex-direction:column;overflow:hidden">
+                <div class="chat-area" style="flex:1;border:none;display:flex;flex-direction:column;padding:12px 14px">
+                    <div class="chat-label">Ask AI about this ticket</div>
+                    <div class="chat-messages" id="chat-messages" style="flex:1;max-height:none"></div>
+                </div>
+                <div style="padding:10px 14px;border-top:1px solid #e8eaed;flex-shrink:0">
+                    <div class="chat-input-row">
+                        <input class="chat-input" id="chat-input" type="text" placeholder="Ask anything about this ticket..." onkeydown="if(event.key==='Enter')sendChat()" />
+                        <button class="chat-send" onclick="sendChat()"><i class="ti ti-send"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FULL SCREEN TICKET VIEW -->
+<div id="ticket-fs" style="display:none;position:fixed;inset:0;background:#f8f9fb;z-index:200;flex-direction:column">
+    <div style="background:#fff;border-bottom:1px solid #e8eaed;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+        <button onclick="closeFS()" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#64748b;cursor:pointer;padding:5px 10px;border:1px solid #e8eaed;border-radius:6px;background:#fff">
+            <i class="ti ti-arrow-left"></i> Back
+        </button>
+        <div style="flex:1">
+            <div style="font-size:10px;color:#94a3b8;font-family:monospace" id="fs-id">—</div>
+            <div style="font-size:15px;font-weight:600;color:#0a0a0a" id="fs-title">—</div>
+        </div>
+        <div style="display:flex;gap:6px" id="fs-actions"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 320px;flex:1;overflow:hidden">
+        <div style="padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+
+            <!-- SLA -->
+            <div>
+                <div class="section-label">SLA Status</div>
+                <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                        <span style="font-size:11px;color:#64748b" id="fs-sla-label">—</span>
+                        <strong style="font-size:11px" id="fs-sla-time">—</strong>
+                    </div>
+                    <div style="height:6px;background:#f1f5f9;border-radius:3px;overflow:hidden">
+                        <div style="height:100%;border-radius:3px;transition:width .3s" id="fs-sla-bar"></div>
+                    </div>
+                    <div style="display:flex;gap:16px;margin-top:10px">
+                        <div style="font-size:11px;color:#64748b"><i class="ti ti-clock" style="font-size:12px;margin-right:3px"></i><span id="fs-opened">—</span></div>
+                        <div style="font-size:11px;font-weight:500" id="fs-due-wrap"><i class="ti ti-alarm" style="font-size:12px;margin-right:3px"></i><span id="fs-due">—</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ticket Details -->
+            <div>
+                <div class="section-label">Ticket Details</div>
+                <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px" id="fs-meta"></div>
+                    <div class="section-label">Description</div>
+                    <div style="font-size:11px;color:#475569;line-height:1.6;background:#f8f9fb;border-radius:6px;padding:8px 10px" id="fs-desc">—</div>
+                </div>
+            </div>
+
+            <!-- User Info -->
+            <div>
+                <div class="section-label">Reported By</div>
+                <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px" id="fs-user">—</div>
+            </div>
+
+            <!-- Assets -->
+            <div>
+                <div class="section-label">User Assets</div>
+                <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px" id="fs-assets">—</div>
+            </div>
+
+            <!-- Timeline -->
+            <div>
+                <div class="section-label">Timeline</div>
+                <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
                     <div class="timeline">
-                        <div class="tl-item">
-                            <div class="tl-dot tl-dot-blue"></div>
-                            <div class="tl-line"></div>
-                            <div class="tl-text"><p>Ticket created</p><span id="tl-created">—</span></div>
-                        </div>
-                        <div class="tl-item">
-                            <div class="tl-dot tl-dot-green"></div>
-                            <div class="tl-line"></div>
-                            <div class="tl-text"><p>AI analysis complete</p><span>Instantly — AI Engine</span></div>
-                        </div>
-                        <div class="tl-item">
-                            <div class="tl-dot tl-dot-gray"></div>
-                            <div class="tl-text"><p>Assigned to technician</p><span>Ramon Valentin</span></div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="section-label">AI Suggestions</div>
-                    <div class="ai-suggest-box" id="d-suggestions">
-                        <div class="ai-suggest-label"><i class="ti ti-sparkles"></i> Analyzing...</div>
+                        <div class="tl-item"><div class="tl-dot tl-dot-blue"></div><div class="tl-line"></div><div class="tl-text"><p>Ticket created</p><span id="fs-tl-created">—</span></div></div>
+                        <div class="tl-item"><div class="tl-dot tl-dot-green"></div><div class="tl-line"></div><div class="tl-text"><p>AI analysis complete</p><span>Instantly — AI Engine</span></div></div>
+                        <div class="tl-item"><div class="tl-dot tl-dot-amber"></div><div class="tl-text"><p>Last updated</p><span id="fs-tl-updated">—</span></div></div>
                     </div>
                 </div>
             </div>
-            <div class="chat-area">
-                <div class="chat-label">Ask AI about this ticket</div>
-                <div class="chat-messages" id="chat-messages"></div>
-                <div class="chat-input-row">
-                    <input class="chat-input" id="chat-input" type="text" placeholder="Ask anything about this ticket..." onkeydown="if(event.key==='Enter')sendChat()" />
-                    <button class="chat-send" onclick="sendChat()"><i class="ti ti-send"></i></button>
+        </div>
+
+        <!-- Side Panel -->
+        <div style="border-left:1px solid #e8eaed;display:flex;flex-direction:column;overflow:hidden;background:#fff">
+            <div style="background:#f5f3ff;border-bottom:1px solid #ddd6fe;padding:12px 14px;flex-shrink:0">
+                <div style="font-size:10px;font-weight:600;color:#6d28d9;margin-bottom:8px;display:flex;align-items:center;gap:4px">
+                    <i class="ti ti-sparkles" style="font-size:12px"></i> AI Suggestions
+                </div>
+                <div id="fs-ai-suggestions"></div>
+            </div>
+            <div style="display:flex;border-bottom:1px solid #e8eaed;flex-shrink:0">
+                <div onclick="switchFSTab('notes')" id="fs-tab-notes" style="flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:500;color:#0050b3;cursor:pointer;border-bottom:2px solid #0050b3">Notes</div>
+                <div onclick="switchFSTab('chat')" id="fs-tab-chat" style="flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent">AI Chat</div>
+            </div>
+            <div id="fs-notes-panel" style="flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px" id="fs-comments-list"></div>
+            <div id="fs-chat-panel" style="flex:1;overflow-y:auto;padding:10px 14px;display:none;flex-direction:column;gap:8px" id="fs-chat-messages"></div>
+            <div id="fs-notes-input" style="padding:10px 14px;border-top:1px solid #e8eaed;flex-shrink:0">
+                <textarea id="fs-comment-input" rows="3" style="width:100%;padding:7px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:11px;resize:none;font-family:inherit;background:#f8f9fb;outline:none" placeholder="Add a technician note..."></textarea>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                    <span style="font-size:10px;color:#94a3b8">Internal — not visible to users</span>
+                    <button onclick="addFSComment()" style="display:flex;align-items:center;gap:4px;padding:5px 12px;background:#0050b3;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer"><i class="ti ti-send"></i> Post</button>
+                </div>
+            </div>
+            <div id="fs-chat-input-area" style="padding:10px 14px;border-top:1px solid #e8eaed;flex-shrink:0;display:none">
+                <div style="display:flex;gap:6px">
+                    <input id="fs-chat-input" type="text" style="flex:1;padding:7px 10px;border:1px solid #e8eaed;border-radius:6px;font-size:11px;outline:none;background:#f8f9fb" placeholder="Ask AI about this ticket..." onkeydown="if(event.key==='Enter')sendFSChat()"/>
+                    <button onclick="sendFSChat()" style="padding:7px 12px;background:#0050b3;color:#fff;border:none;border-radius:6px;cursor:pointer;display:flex;align-items:center"><i class="ti ti-send" style="font-size:13px"></i></button>
                 </div>
             </div>
         </div>
@@ -373,59 +498,26 @@
 <!-- TICKET MODAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
     <div class="modal">
-        <div class="modal-head">
-            <h2>New Ticket</h2>
-            <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-head"><h2>New Ticket</h2><button class="modal-close" onclick="closeModal()">×</button></div>
+        <div class="form-group"><label class="form-label">Title *</label><input class="form-input" id="t-title" type="text" placeholder="Brief description of the issue"></div>
+        <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="t-desc" rows="3" placeholder="Detailed description..."></textarea></div>
+        <div class="form-group"><label class="form-label">Priority</label>
+            <select class="form-input" id="t-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
         </div>
-        <div class="form-group">
-            <label class="form-label">Title *</label>
-            <input class="form-input" id="t-title" type="text" placeholder="Brief description of the issue">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea class="form-input" id="t-desc" rows="3" placeholder="Detailed description of the problem..."></textarea>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Priority</label>
-            <select class="form-input" id="t-priority">
-                <option value="low">Low</option>
-                <option value="medium" selected>Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-        <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="submitTicket()"><i class="ti ti-plus"></i> Create Ticket</button>
-        </div>
+        <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitTicket()"><i class="ti ti-plus"></i> Create Ticket</button></div>
     </div>
 </div>
 
 <!-- USER MODAL -->
 <div class="modal-overlay" id="user-modal" onclick="if(event.target===this)closeUserModal()">
     <div class="modal">
-        <div class="modal-head">
-            <h2>New User</h2>
-            <button class="modal-close" onclick="closeUserModal()">×</button>
+        <div class="modal-head"><h2>New User</h2><button class="modal-close" onclick="closeUserModal()">×</button></div>
+        <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="u-name" type="text" placeholder="John Doe"></div>
+        <div class="form-group"><label class="form-label">Email *</label><input class="form-input" id="u-email" type="email" placeholder="john@novatech.com"></div>
+        <div class="form-group"><label class="form-label">Role</label>
+            <select class="form-input" id="u-role"><option value="user">End User</option><option value="technician">Technician</option></select>
         </div>
-        <div class="form-group">
-            <label class="form-label">Full Name *</label>
-            <input class="form-input" id="u-name" type="text" placeholder="John Doe">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Email *</label>
-            <input class="form-input" id="u-email" type="email" placeholder="john@abbvie.com">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Role</label>
-            <select class="form-input" id="u-role">
-                <option value="user">End User</option>
-                <option value="technician">Technician</option>
-            </select>
-        </div>
-        <div class="modal-foot">
-            <button class="btn btn-ghost" onclick="closeUserModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="submitUser()"><i class="ti ti-plus"></i> Create User</button>
-        </div>
+        <div class="modal-foot"><button class="btn btn-ghost" onclick="closeUserModal()">Cancel</button><button class="btn btn-primary" onclick="submitUser()"><i class="ti ti-plus"></i> Create User</button></div>
     </div>
 </div>
 
@@ -433,6 +525,7 @@
     let allTickets = [];
     let allUsers = [];
     let selectedTicket = null;
+    let fsTicket = null;
     let currentPage = 'tickets';
 
     const priorityIcons = {
@@ -447,26 +540,215 @@
         low: ["Reset password via Active Directory Users and Computers (ADUC)","Unlock account if locked: <code>Unlock-ADAccount -Identity username</code>","Verify user knows password complexity requirements before resetting"]
     };
 
+    async function openFS(id) {
+        const res = await fetch(`/api/tickets/${id}`);
+        const ticket = await res.json();
+        fsTicket = ticket;
+
+        document.getElementById('ticket-fs').style.display = 'flex';
+        document.getElementById('fs-id').textContent = `INC${String(ticket.id).padStart(4,'0')} · ${ticket.category||'General'} · NovaTech IT`;
+        document.getElementById('fs-title').textContent = ticket.title;
+        document.getElementById('fs-desc').textContent = ticket.description || 'No description provided';
+        document.getElementById('fs-tl-created').textContent = new Date(ticket.created_at).toLocaleString() + ' — ' + (ticket.user_name||'Unknown');
+        document.getElementById('fs-tl-updated').textContent = new Date(ticket.updated_at).toLocaleString();
+
+        // SLA
+        const slaHours = ticket.priority==='high'?4:ticket.priority==='medium'?8:24;
+        const created = new Date(ticket.created_at);
+        const due = new Date(created.getTime() + slaHours*3600000);
+        const now = new Date();
+        const elapsed = Math.min(100, Math.round((now-created)/(due-created)*100));
+        const remaining = Math.max(0, Math.round((due-now)/60000));
+        const remHrs = Math.floor(remaining/60);
+        const remMin = remaining%60;
+        const slaColor = elapsed>=100?'#dc2626':elapsed>80?'#d97706':'#16a34a';
+        document.getElementById('fs-sla-label').textContent = `Response SLA — ${ticket.priority} priority (${slaHours}h)`;
+        document.getElementById('fs-sla-time').style.color = slaColor;
+        document.getElementById('fs-sla-time').textContent = elapsed>=100 ? 'SLA BREACHED' : `${elapsed}% elapsed — ${remHrs}h ${remMin}min remaining`;
+        document.getElementById('fs-sla-bar').style.width = elapsed+'%';
+        document.getElementById('fs-sla-bar').style.background = slaColor;
+        document.getElementById('fs-opened').textContent = `Opened: ${created.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+        document.getElementById('fs-due').textContent = `Due: ${due.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+        document.getElementById('fs-due-wrap').style.color = slaColor;
+
+        // Meta grid
+        const statusColors = {open:'background:#dbeafe;color:#1e40af',resolved:'background:#dcfce7;color:#166534',pending:'background:#fef9c3;color:#854d0e'};
+        const prioColors = {high:'background:#fee2e2;color:#991b1b',medium:'background:#fef3c7;color:#92400e',low:'background:#dcfce7;color:#166634'};
+        document.getElementById('fs-meta').innerHTML = `
+            <div class="fs-meta-item"><label>Status</label><p><span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;${statusColors[ticket.status]}">${ticket.status.toUpperCase()}</span></p></div>
+            <div class="fs-meta-item"><label>Priority</label><p><span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;${prioColors[ticket.priority]}">${ticket.priority.toUpperCase()}</span></p></div>
+            <div class="fs-meta-item"><label>Category</label><p>${ticket.category||'General'}</p></div>
+            <div class="fs-meta-item"><label>Assigned To</label><p>${ticket.assigned_to||'Unassigned'}</p></div>
+            <div class="fs-meta-item"><label>Created</label><p>${new Date(ticket.created_at).toLocaleString()}</p></div>
+            <div class="fs-meta-item"><label>Last Updated</label><p>${new Date(ticket.updated_at).toLocaleString()}</p></div>
+        `;
+
+        // Actions
+        const allStatuses = ['open','pending','resolved'];
+        document.getElementById('fs-actions').innerHTML = allStatuses
+            .filter(s=>s!==ticket.status)
+            .map(s=>{
+                const c = {open:'background:#dbeafe;color:#1e40af',pending:'background:#fef9c3;color:#854d0e',resolved:'background:#dcfce7;color:#166534'};
+                return `<button onclick="changeFSStatus(${ticket.id},'${s}')" style="${c[s]};border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:600;cursor:pointer">→ Mark ${s}</button>`;
+            }).join('');
+
+        // User info
+        const initials = ticket.user_name ? ticket.user_name.split(' ').map(n=>n[0]).join('') : '?';
+        document.getElementById('fs-user').innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="width:40px;height:40px;border-radius:50%;background:#0050b3;color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${initials}</div>
+                <div>
+                    <div style="font-size:13px;font-weight:600;color:#0a0a0a">${ticket.user_name||'Unknown'}</div>
+                    <div style="font-size:11px;color:#64748b">${ticket.user_role||'user'} · ${ticket.user_department||'—'}</div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid #e8eaed;padding-top:10px">
+                <div style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px"><i class="ti ti-mail" style="font-size:13px;color:#94a3b8"></i> ${ticket.user_email||'—'}</div>
+                <div style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px"><i class="ti ti-id-badge" style="font-size:13px;color:#94a3b8"></i> ${ticket.user_employee_id||'—'}</div>
+                <div style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px"><i class="ti ti-user-check" style="font-size:13px;color:#94a3b8"></i> Reports to: ${ticket.user_reports_to||'—'}</div>
+                <div style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px"><i class="ti ti-ticket" style="font-size:13px;color:#94a3b8"></i> ${ticket.user_ticket_count||0} tickets total</div>
+            </div>
+        `;
+
+        // Assets
+        const assets = ticket.assets || [];
+        const assetIcons = {Laptop:'ti-device-laptop', 'Rugged Laptop':'ti-device-laptop', Peripheral:'ti-device-desktop', Printer:'ti-printer', Mobile:'ti-device-mobile'};
+        document.getElementById('fs-assets').innerHTML = assets.length === 0 ? '<div style="font-size:11px;color:#94a3b8">No assets registered</div>' :
+            assets.map(a => `
+                <div class="asset-row">
+                    <div class="asset-icon"><i class="ti ${assetIcons[a.type]||'ti-device-laptop'}"></i></div>
+                    <div>
+                        <div class="asset-name">${a.name}</div>
+                        <div class="asset-tag">${a.type} · ST: ${a.service_tag||'—'}</div>
+                    </div>
+                    <span class="asset-status-badge ${a.status==='active'?'asset-active':'asset-inactive'}">${a.status.toUpperCase()}</span>
+                </div>
+            `).join('');
+
+        // AI suggestions
+        const suggestions = aiSuggestions[ticket.priority] || aiSuggestions.medium;
+        const score = ticket.priority==='high'?92:ticket.priority==='medium'?78:99;
+        document.getElementById('fs-ai-suggestions').innerHTML = `
+            <div style="font-size:10px;color:#4c1d95;margin-bottom:6px">${suggestions.length} solutions — confidence ${score}%</div>
+            ${suggestions.map((s,i)=>`
+                <div style="display:flex;gap:6px;padding:4px 0;border-bottom:1px solid #ede9fe;font-size:11px;color:#4c1d95;line-height:1.4">
+                    <div style="width:14px;height:14px;border-radius:50%;background:#7c3aed;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px">${i+1}</div>
+                    <span>${s}</span>
+                </div>
+            `).join('')}
+        `;
+
+        // Load comments
+        loadFSComments(ticket.id);
+
+        // Chat greeting
+        document.getElementById('fs-chat-panel').innerHTML = `<div style="padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5;background:#f5f6fa;color:#0a0a0a">Hello! I've analyzed INC${String(ticket.id).padStart(4,'0')}. I found ${suggestions.length} solutions with ${score}% confidence. How can I help?</div>`;
+    }
+
+    function closeFS() {
+        document.getElementById('ticket-fs').style.display = 'none';
+        loadTickets();
+    }
+
+    async function changeFSStatus(id, status) {
+        await fetch(`/api/tickets/${id}/status`, {
+            method:'PUT', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({status})
+        });
+        openFS(id);
+    }
+
+    function switchFSTab(tab) {
+        const isNotes = tab === 'notes';
+        document.getElementById('fs-notes-panel').style.display = isNotes ? 'flex' : 'none';
+        document.getElementById('fs-chat-panel').style.display = isNotes ? 'none' : 'flex';
+        document.getElementById('fs-notes-input').style.display = isNotes ? 'block' : 'none';
+        document.getElementById('fs-chat-input-area').style.display = isNotes ? 'none' : 'block';
+        document.getElementById('fs-tab-notes').style.color = isNotes ? '#0050b3' : '#94a3b8';
+        document.getElementById('fs-tab-notes').style.borderBottom = isNotes ? '2px solid #0050b3' : '2px solid transparent';
+        document.getElementById('fs-tab-chat').style.color = isNotes ? '#94a3b8' : '#0050b3';
+        document.getElementById('fs-tab-chat').style.borderBottom = isNotes ? '2px solid transparent' : '2px solid #0050b3';
+    }
+
+    async function loadFSComments(ticketId) {
+        const res = await fetch(`/api/tickets/${ticketId}/comments`);
+        const comments = await res.json();
+        const panel = document.getElementById('fs-notes-panel');
+        if(comments.length === 0){
+            panel.innerHTML = '<div style="font-size:11px;color:#94a3b8;padding:10px">No notes yet.</div>';
+            return;
+        }
+        panel.innerHTML = comments.map(c => {
+            const ini = c.author.split(' ').map(n=>n[0]).join('');
+            return `
+            <div style="background:#f8f9fb;border:1px solid #e8eaed;border-radius:8px;padding:10px 12px">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#0a0a0a">
+                        <div style="width:20px;height:20px;border-radius:50%;background:#0050b3;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center">${ini}</div>
+                        ${c.author}
+                    </div>
+                    <span style="font-size:10px;color:#94a3b8">${new Date(c.created_at).toLocaleString()}</span>
+                </div>
+                <div style="font-size:11px;color:#475569;line-height:1.5">${c.content}</div>
+            </div>`;
+        }).join('');
+    }
+
+    async function addFSComment() {
+        const content = document.getElementById('fs-comment-input').value.trim();
+        if(!content || !fsTicket) return;
+        await fetch(`/api/tickets/${fsTicket.id}/comments`, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({content, author:'Ramon Valentin'})
+        });
+        document.getElementById('fs-comment-input').value = '';
+        loadFSComments(fsTicket.id);
+    }
+
+    async function sendFSChat() {
+        const input = document.getElementById('fs-chat-input');
+        const msg = input.value.trim();
+        if(!msg || !fsTicket) return;
+        const panel = document.getElementById('fs-chat-panel');
+        panel.innerHTML += `<div style="padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5;background:#0050b3;color:#fff;align-self:flex-end;max-width:85%">${msg}</div>`;
+        panel.innerHTML += `<div id="fs-typing" style="padding:7px 10px;border-radius:6px;font-size:11px;background:#f5f6fa;color:#0a0a0a">⟳ AI thinking...</div>`;
+        input.value = '';
+        panel.scrollTop = panel.scrollHeight;
+        try {
+            const res = await fetch(`/api/tickets/${fsTicket.id}/chat`, {
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({message: msg})
+            });
+            const data = await res.json();
+            document.getElementById('fs-typing').remove();
+            panel.innerHTML += `<div style="padding:7px 10px;border-radius:6px;font-size:11px;line-height:1.5;background:#f5f6fa;color:#0a0a0a">${data.response}</div>`;
+            panel.scrollTop = panel.scrollHeight;
+        } catch(err) {
+            document.getElementById('fs-typing').remove();
+            panel.innerHTML += `<div style="padding:7px 10px;border-radius:6px;font-size:11px;background:#f5f6fa;color:#0a0a0a">Error connecting to AI.</div>`;
+        }
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(tab === 'comments' && selectedTicket) loadComments(selectedTicket.id);
+    }
+
     function navigateTo(page) {
         currentPage = page;
         document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-
-        if(page === 'tickets') {
-            event.currentTarget.classList.add('active');
-            document.getElementById('tickets-header').style.display = 'flex';
-            document.getElementById('users-header').style.display = 'none';
-            document.getElementById('tickets-view').style.display = 'flex';
-            document.getElementById('users-view').style.display = 'none';
-            document.getElementById('detail-panel').style.display = 'flex';
-        } else if(page === 'users') {
-            event.currentTarget.classList.add('active');
-            document.getElementById('tickets-header').style.display = 'none';
-            document.getElementById('users-header').style.display = 'flex';
-            document.getElementById('tickets-view').style.display = 'none';
-            document.getElementById('users-view').style.display = 'flex';
-            document.getElementById('detail-panel').style.display = 'none';
-            loadUsers();
-        }
+        event.currentTarget.classList.add('active');
+        const isTickets = page === 'tickets';
+        const isUsers = page === 'users';
+        document.getElementById('tickets-header').style.display = isTickets ? 'flex' : 'none';
+        document.getElementById('users-header').style.display = isUsers ? 'flex' : 'none';
+        document.getElementById('tickets-view').style.display = isTickets ? 'flex' : 'none';
+        document.getElementById('users-view').style.display = isUsers ? 'flex' : 'none';
+        document.getElementById('detail-panel').style.display = isTickets ? 'flex' : 'none';
+        if(isUsers) loadUsers();
     }
 
     async function loadTickets() {
@@ -514,36 +796,85 @@
         }).join('');
     }
 
-    function selectTicket(id) {
+    async function selectTicket(id) {
         selectedTicket = allTickets.find(t=>t.id===id);
         if(!selectedTicket) return;
         renderTickets(allTickets);
+        const res = await fetch(`/api/tickets/${id}`);
+        const ticket = await res.json();
         document.getElementById('empty-detail').style.display = 'none';
-        const dc = document.getElementById('detail-content');
-        dc.style.display = 'flex';
-        document.getElementById('d-title').textContent = selectedTicket.title;
-        document.getElementById('tl-created').textContent = new Date(selectedTicket.created_at).toLocaleString() + ' — ' + (selectedTicket.user_name||'Unknown');
-        const score = selectedTicket.priority==='high'?92:selectedTicket.priority==='medium'?78:99;
+        document.getElementById('detail-content').style.display = 'flex';
+        const initials = ticket.user_name ? ticket.user_name.split(' ').map(n=>n[0]).join('') : '?';
+        document.getElementById('d-user-initials').textContent = initials;
+        document.getElementById('d-user-name').textContent = ticket.user_name || 'Unknown';
+        document.getElementById('d-user-role').textContent = `${ticket.user_role||'user'} · ${ticket.user_department||'—'}`;
+        document.getElementById('d-user-email').textContent = ticket.user_email || '—';
+        document.getElementById('d-user-tickets').textContent = `${ticket.user_ticket_count||0} tickets`;
+        document.getElementById('d-description').textContent = ticket.description || 'No description provided';
+        document.getElementById('tl-created').textContent = new Date(ticket.created_at).toLocaleString() + ' — ' + (ticket.user_name||'Unknown');
+        document.getElementById('tl-updated-time').textContent = new Date(ticket.updated_at).toLocaleString();
+        const score = ticket.priority==='high'?92:ticket.priority==='medium'?78:99;
         document.getElementById('d-badges').innerHTML = `
-            <span class="pbadge pb-${selectedTicket.priority==='medium'?'med':selectedTicket.priority}">${selectedTicket.priority.toUpperCase()}</span>
-            <span class="sbadge sb-${selectedTicket.status}">${selectedTicket.status.toUpperCase()}</span>
+            <span class="pbadge pb-${ticket.priority==='medium'?'med':ticket.priority}">${ticket.priority.toUpperCase()}</span>
+            <span class="sbadge sb-${ticket.status}">${ticket.status.toUpperCase()}</span>
             <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:#f5f3ff;color:#6d28d9">AI ${score}%</span>
         `;
-        const suggestions = aiSuggestions[selectedTicket.priority] || aiSuggestions.medium;
+        const allStatuses = ['open','pending','resolved'];
+        document.getElementById('status-actions').innerHTML = allStatuses
+            .filter(s=>s!==ticket.status)
+            .map(s=>{
+                const c={open:'background:#dbeafe;color:#1e40af',pending:'background:#fef9c3;color:#854d0e',resolved:'background:#dcfce7;color:#166534'};
+                return `<button onclick="changeStatus(${ticket.id},'${s}')" style="${c[s]};border:none;border-radius:4px;padding:4px 10px;font-size:10px;font-weight:600;cursor:pointer">→ Mark ${s}</button>`;
+            }).join('');
+        const suggestions = aiSuggestions[ticket.priority] || aiSuggestions.medium;
         document.getElementById('d-suggestions').innerHTML = `
             <div class="ai-suggest-label"><i class="ti ti-sparkles"></i> ${suggestions.length} solutions — confidence ${score}%</div>
             ${suggestions.map((s,i)=>`<div class="suggest-item"><div class="suggest-num">${i+1}</div><div class="suggest-text">${s}</div></div>`).join('')}
         `;
         document.getElementById('chat-messages').innerHTML = `
-            <div class="chat-msg ai">Hello! I've analyzed INC${String(selectedTicket.id).padStart(4,'0')}. I found ${suggestions.length} potential solutions with ${score}% confidence. How can I help?</div>
+            <div class="chat-msg ai">Hello! I've analyzed INC${String(ticket.id).padStart(4,'0')}. I found ${suggestions.length} solutions with ${score}% confidence. How can I help?</div>
         `;
+        document.querySelectorAll('.detail-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+        document.querySelector('.detail-tab').classList.add('active');
+        document.getElementById('tab-info').classList.add('active');
+    }
+
+    async function changeStatus(id, status) {
+        await fetch(`/api/tickets/${id}/status`, {
+            method:'PUT', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({status})
+        });
+        await loadTickets();
+        await selectTicket(id);
+    }
+
+    async function loadComments(ticketId) {
+        const res = await fetch(`/api/tickets/${ticketId}/comments`);
+        const comments = await res.json();
+        const list = document.getElementById('comments-list');
+        if(comments.length === 0){ list.innerHTML = '<div class="loading" style="padding:20px">No notes yet.</div>'; return; }
+        list.innerHTML = comments.map(c => {
+            const ini = c.author.split(' ').map(n=>n[0]).join('');
+            return `<div class="comment"><div class="comment-header"><div class="comment-author"><div class="comment-author-dot">${ini}</div>${c.author}</div><span class="comment-time">${new Date(c.created_at).toLocaleString()}</span></div><div class="comment-text">${c.content}</div></div>`;
+        }).join('');
+    }
+
+    async function addComment() {
+        const content = document.getElementById('comment-input').value.trim();
+        if(!content || !selectedTicket) return;
+        await fetch(`/api/tickets/${selectedTicket.id}/comments`, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({content, author:'Ramon Valentin'})
+        });
+        document.getElementById('comment-input').value = '';
+        loadComments(selectedTicket.id);
     }
 
     function filterTickets(status, el) {
         document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
         el.classList.add('on');
-        const filtered = status==='all' ? allTickets : allTickets.filter(t=>t.status===status);
-        renderTickets(filtered);
+        renderTickets(status==='all' ? allTickets : allTickets.filter(t=>t.status===status));
     }
 
     async function loadUsers() {
@@ -592,8 +923,7 @@
         const role = document.getElementById('u-role').value;
         if(!name || !email){ alert('Name and email required'); return; }
         const res = await fetch('/api/users', {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
+            method:'POST', headers:{'Content-Type':'application/json'},
             body:JSON.stringify({name, email, role})
         });
         if(res.ok){ closeUserModal(); loadUsers(); }
@@ -617,9 +947,8 @@
         msgs.scrollTop = msgs.scrollHeight;
         try {
             const res = await fetch(`/api/tickets/${selectedTicket.id}/chat`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: msg})
+                method:'POST', headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({message: msg})
             });
             const data = await res.json();
             document.getElementById('typing').remove();
@@ -627,7 +956,7 @@
             msgs.scrollTop = msgs.scrollHeight;
         } catch(err) {
             document.getElementById('typing').remove();
-            msgs.innerHTML += `<div class="chat-msg ai">Error connecting to AI. Please try again.</div>`;
+            msgs.innerHTML += `<div class="chat-msg ai">Error connecting to AI.</div>`;
         }
     }
 
@@ -644,8 +973,7 @@
         const priority = document.getElementById('t-priority').value;
         if(!title){ alert('Title is required'); return; }
         const res = await fetch('/api/tickets', {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
+            method:'POST', headers:{'Content-Type':'application/json'},
             body:JSON.stringify({title, description, priority})
         });
         if(res.ok){ closeModal(); loadTickets(); }
