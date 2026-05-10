@@ -115,5 +115,48 @@ def get_messages(ticket_id):
     conn.close()
     return jsonify(messages)
 
+@app.route("/api/users", methods=["GET"])
+def get_users():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT u.id, u.name, u.email, u.role, u.created_at,
+               COUNT(t.id) as ticket_count
+        FROM users u
+        LEFT JOIN tickets t ON t.user_id = u.id
+        GROUP BY u.id
+        ORDER BY u.created_at DESC
+    """)
+    users = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(users)
+
+@app.route("/api/users", methods=["POST"])
+def create_user():
+    data = request.get_json()
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO users (name, email, role)
+            VALUES (?, ?, ?)
+        """, (data["name"], data["email"], data.get("role", "user")))
+        conn.commit()
+        user_id = cursor.lastrowid
+        conn.close()
+        return jsonify({"id": user_id, "message": "User created"}), 201
+    except Exception as e:
+        conn.close()
+        return jsonify({"error": str(e)}), 400
+
+@app.route("/api/users/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "User deleted"})
+
 if __name__ == "__main__":
     app.run(debug=True)
