@@ -312,6 +312,62 @@
                 <div class="tickets-bar"><span style="font-size:12px;font-weight:500;color:#0a0a0a">All users</span></div>
                 <div class="tickets-list" id="users-content"><div class="loading">Loading users...</div></div>
             </div>
+
+            <!-- DASHBOARD VIEW -->
+<div id="dashboard-view" style="display:none;flex-direction:column;gap:14px">
+    <div class="metrics">
+        <div class="metric">
+            <div class="metric-top"><div><div class="metric-label">Total Tickets</div><div class="metric-val" id="d-total">—</div></div><div class="metric-icon mi-blue"><i class="ti ti-ticket"></i></div></div>
+            <div class="metric-sub" id="d-total-sub">Loading...</div>
+        </div>
+        <div class="metric">
+            <div class="metric-top"><div><div class="metric-label">Open</div><div class="metric-val" id="d-open">—</div></div><div class="metric-icon mi-amber"><i class="ti ti-folder-open"></i></div></div>
+            <div class="metric-sub" id="d-open-sub">Loading...</div>
+        </div>
+        <div class="metric">
+            <div class="metric-top"><div><div class="metric-label">Resolved</div><div class="metric-val" id="d-resolved">—</div></div><div class="metric-icon mi-green"><i class="ti ti-check"></i></div></div>
+            <div class="metric-sub">AI assisted</div>
+        </div>
+        <div class="metric">
+            <div class="metric-top"><div><div class="metric-label">Pending</div><div class="metric-val" id="d-pending">—</div></div><div class="metric-icon mi-purple"><i class="ti ti-clock"></i></div></div>
+            <div class="metric-sub">Awaiting response</div>
+        </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:6px">Tickets by Status</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px;font-size:11px;color:#64748b" id="d-status-legend"></div>
+            <div style="position:relative;height:180px"><canvas id="statusChart" role="img" aria-label="Donut chart tickets by status">Status breakdown</canvas></div>
+        </div>
+        <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:6px">Tickets by Priority</div>
+            <div style="position:relative;height:180px"><canvas id="priorityChart" role="img" aria-label="Bar chart tickets by priority">Priority breakdown</canvas></div>
+        </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+        <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:6px">Tickets by Category</div>
+        <div style="position:relative;height:160px"><canvas id="categoryChart" role="img" aria-label="Bar chart tickets by category">Category breakdown</canvas></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:6px">Tickets by Technician</div>
+            <div style="position:relative;height:160px"><canvas id="techChart" role="img" aria-label="Bar chart tickets by technician">Technician breakdown</canvas></div>
+        </div>
+        <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+            <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:6px">Tickets by Month</div>
+            <div style="position:relative;height:160px"><canvas id="monthChart" role="img" aria-label="Line chart tickets by month">Monthly trend</canvas></div>
+        </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e8eaed;border-radius:8px;padding:14px 16px">
+        <div style="font-size:12px;font-weight:500;color:#0a0a0a;margin-bottom:10px">Recent Tickets</div>
+        <div id="d-recent"></div>
+    </div>
+</div>
+
         </div>
     </div>
 
@@ -737,18 +793,125 @@
         if(tab === 'comments' && selectedTicket) loadComments(selectedTicket.id);
     }
 
+        let dashCharts = {};
+
     function navigateTo(page) {
         currentPage = page;
         document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
         event.currentTarget.classList.add('active');
         const isTickets = page === 'tickets';
         const isUsers = page === 'users';
+        const isDash = page === 'dashboard';
         document.getElementById('tickets-header').style.display = isTickets ? 'flex' : 'none';
         document.getElementById('users-header').style.display = isUsers ? 'flex' : 'none';
         document.getElementById('tickets-view').style.display = isTickets ? 'flex' : 'none';
         document.getElementById('users-view').style.display = isUsers ? 'flex' : 'none';
+        document.getElementById('dashboard-view').style.display = isDash ? 'flex' : 'none';
         document.getElementById('detail-panel').style.display = isTickets ? 'flex' : 'none';
         if(isUsers) loadUsers();
+        if(isDash) loadDashboard();
+    }
+
+    async function loadDashboard() {
+        const res = await fetch('/api/dashboard');
+        const data = await res.json();
+
+        document.getElementById('d-total').textContent = data.total;
+        document.getElementById('d-open').textContent = data.open;
+        document.getElementById('d-resolved').textContent = data.resolved;
+        document.getElementById('d-pending').textContent = data.pending;
+        document.getElementById('d-total-sub').textContent = `${data.total} total tickets`;
+        document.getElementById('d-open-sub').textContent = `${data.high} high priority`;
+
+        Object.values(dashCharts).forEach(c=>c.destroy());
+        dashCharts = {};
+
+        dashCharts.status = new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Open','Resolved','Pending'],
+                datasets: [{
+                    data: [data.open, data.resolved, data.pending],
+                    backgroundColor: ['#3b82f6','#22c55e','#f59e0b'],
+                    borderWidth: 2, borderColor: '#fff'
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, cutout:'65%' }
+        });
+
+        document.getElementById('d-status-legend').innerHTML = `
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#3b82f6;display:inline-block"></span>Open ${data.open}</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#22c55e;display:inline-block"></span>Resolved ${data.resolved}</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#f59e0b;display:inline-block"></span>Pending ${data.pending}</span>
+        `;
+
+        dashCharts.priority = new Chart(document.getElementById('priorityChart'), {
+            type: 'bar',
+            data: {
+                labels: ['High','Medium','Low'],
+                datasets: [{
+                    data: [data.high, data.medium, data.low],
+                    backgroundColor: ['#ef4444','#f59e0b','#22c55e'],
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{stepSize:1}}} }
+        });
+
+        dashCharts.category = new Chart(document.getElementById('categoryChart'), {
+            type: 'bar',
+            data: {
+                labels: data.by_category.map(c=>c.category),
+                datasets: [{
+                    data: data.by_category.map(c=>c.count),
+                    backgroundColor: '#0050b3',
+                    borderRadius: 4
+                }]
+            },
+            options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true,ticks:{stepSize:1}}} }
+        });
+
+        dashCharts.tech = new Chart(document.getElementById('techChart'), {
+            type: 'bar',
+            data: {
+                labels: data.by_technician.map(t=>t.assigned_to),
+                datasets: [{
+                    data: data.by_technician.map(t=>t.count),
+                    backgroundColor: '#7c3aed',
+                    borderRadius: 4
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{stepSize:1}}} }
+        });
+
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        dashCharts.month = new Chart(document.getElementById('monthChart'), {
+            type: 'line',
+            data: {
+                labels: data.by_month.map(m=>monthNames[parseInt(m.month)-1]),
+                datasets: [{
+                    data: data.by_month.map(m=>m.count),
+                    borderColor: '#0050b3',
+                    backgroundColor: '#eff6ff',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#0050b3'
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,ticks:{stepSize:1}}} }
+        });
+
+        const statusColors = {open:'sb-open',resolved:'sb-resolved',pending:'sb-pending'};
+        document.getElementById('d-recent').innerHTML = data.recent.map(t=>`
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#f8f9fb;border-radius:6px;margin-bottom:6px">
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:6px;height:6px;border-radius:50%;background:${t.priority==='high'?'#ef4444':t.priority==='medium'?'#f59e0b':'#22c55e'}"></div>
+                    <span style="font-size:11px;font-weight:500;color:#0a0a0a">${t.title}</span>
+                    <span style="font-size:10px;color:#94a3b8">${t.user_name||'—'}</span>
+                </div>
+                <span class="sbadge ${statusColors[t.status]}">${t.status.toUpperCase()}</span>
+            </div>
+        `).join('');
     }
 
     async function loadTickets() {
@@ -980,6 +1143,10 @@
     }
 
     loadTickets();
+
+
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </body>
 </html>

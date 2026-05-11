@@ -179,6 +179,74 @@ def run_seed():
     seed()
     return jsonify({"message": "Database seeded!"})
 
+@app.route("/api/dashboard", methods=["GET"])
+def get_dashboard():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets")
+    total = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='open'")
+    open_count = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='resolved'")
+    resolved = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='pending'")
+    pending = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='high'")
+    high = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='medium'")
+    medium = cursor.fetchone()['total']
+
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='low'")
+    low = cursor.fetchone()['total']
+
+    cursor.execute("""
+        SELECT category, COUNT(*) as count
+        FROM tickets GROUP BY category ORDER BY count DESC
+    """)
+    by_category = [dict(row) for row in cursor.fetchall()]
+
+    cursor.execute("""
+        SELECT assigned_to, COUNT(*) as count
+        FROM tickets GROUP BY assigned_to ORDER BY count DESC
+    """)
+    by_technician = [dict(row) for row in cursor.fetchall()]
+
+    cursor.execute("""
+        SELECT strftime('%m', created_at) as month, COUNT(*) as count
+        FROM tickets GROUP BY month ORDER BY month
+    """)
+    by_month = [dict(row) for row in cursor.fetchall()]
+
+    cursor.execute("""
+        SELECT t.id, t.title, t.status, t.priority, t.created_at,
+               u.name as user_name
+        FROM tickets t
+        LEFT JOIN users u ON t.user_id = u.id
+        ORDER BY t.created_at DESC LIMIT 5
+    """)
+    recent = [dict(row) for row in cursor.fetchall()]
+
+    conn.close()
+    return jsonify({
+        "total": total,
+        "open": open_count,
+        "resolved": resolved,
+        "pending": pending,
+        "high": high,
+        "medium": medium,
+        "low": low,
+        "by_category": by_category,
+        "by_technician": by_technician,
+        "by_month": by_month,
+        "recent": recent
+    })
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
