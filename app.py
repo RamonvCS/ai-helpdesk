@@ -247,6 +247,20 @@ def run_seed():
     seed()
     return jsonify({"message": "Database seeded!"})
 
+@app.route("/api/assets", methods=["GET"])
+def get_assets():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT a.*, u.name as user_name, u.department as user_department
+        FROM assets a
+        LEFT JOIN users u ON a.user_id = u.id
+        ORDER BY a.created_at DESC
+    """)
+    assets = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(assets)
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
