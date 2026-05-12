@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
-from database import get_connection, init_db
+from database import get_connection, init_db, is_postgres
 from groq import Groq
 import os
 
@@ -10,6 +10,9 @@ app = Flask(__name__)
 init_db()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+def p(n=1):
+    return '%s' if is_postgres() else '?'
 
 @app.route("/")
 def index():
@@ -26,7 +29,8 @@ def get_tickets():
         LEFT JOIN users u ON t.user_id = u.id
         ORDER BY t.created_at DESC
     """)
-    tickets = [dict(row) for row in cursor.fetchall()]
+    rows = cursor.fetchall()
+    tickets = [dict(row) for row in rows]
     conn.close()
     return jsonify(tickets)
 
@@ -34,7 +38,8 @@ def get_tickets():
 def get_ticket(ticket_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"""
         SELECT t.*, u.name as user_name, u.email as user_email,
                u.role as user_role, u.department as user_department,
                u.employee_id as user_employee_id, u.reports_to as user_reports_to,
@@ -42,21 +47,34 @@ def get_ticket(ticket_id):
                (SELECT COUNT(*) FROM tickets WHERE user_id = t.user_id) as user_ticket_count
         FROM tickets t
         LEFT JOIN users u ON t.user_id = u.id
-        WHERE t.id = ?
+        WHERE t.id = {ph}
     """, (ticket_id,))
     row = cursor.fetchone()
     if not row:
         conn.close()
         return jsonify({"error": "Ticket not found"}), 404
     ticket = dict(row)
-
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT name, type, service_tag, status
-        FROM assets WHERE user_id = ?
+        FROM assets WHERE user_id = {ph}
     """, (ticket['user_id'],))
     ticket['assets'] = [dict(a) for a in cursor.fetchall()]
     conn.close()
     return jsonify(ticket)
+
+@app.route("/api/tickets", methods=["POST"])
+def create_ticket():
+    data = request.get_json()
+    conn = get_connection()
+    cursor = conn.cursor()
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"""
+        INSERT INTO tickets (title, description, priority, status, user_id)
+        VALUES ({ph}, {ph}, {ph}, 'open', 1)
+    """, (data["title"], data["description"], data.get("priority", "medium")))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Ticket created"}), 201
 
 @app.route("/api/tickets/<int:ticket_id>/status", methods=["PUT"])
 def update_status(ticket_id):
@@ -64,9 +82,10 @@ def update_status(ticket_id):
     new_status = data.get("status")
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("""
-        UPDATE tickets SET status = ?, updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"""
+        UPDATE tickets SET status = {ph}, updated_at = CURRENT_TIMESTAMP
+        WHERE id = {ph}
     """, (new_status, ticket_id))
     conn.commit()
     conn.close()
@@ -78,19 +97,20 @@ def chat(ticket_id):
     user_message = data.get("message", "")
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"SELECT * FROM tickets WHERE id = {ph}", (ticket_id,))
     ticket = dict(cursor.fetchone())
-    cursor.execute("""
+    cursor.execute(f"""
         SELECT role, content FROM messages
-        WHERE ticket_id = ? ORDER BY created_at ASC
+        WHERE ticket_id = {ph} ORDER BY created_at ASC
     """, (ticket_id,))
     history = cursor.fetchall()
-    cursor.execute("""
+    cursor.execute(f"""
         INSERT INTO messages (ticket_id, role, content)
-        VALUES (?, 'user', ?)
+        VALUES ({ph}, 'user', {ph})
     """, (ticket_id, user_message))
     conn.commit()
-    messages = [{"role":"system","content":f"""You are an expert IT helpdesk assistant at NovaTech Solutions
+    messages = [{"role":"system","content":f"""You are an expert IT helpdesk assistant at NovaTech Solutions.
 Ticket #{ticket_id}: "{ticket['title']}"
 Description: {ticket['description']}
 Priority: {ticket['priority']} | Status: {ticket['status']}
@@ -100,7 +120,7 @@ Give concise, technical, actionable advice. Max 150 words."""}]
     messages.append({"role":"user","content":user_message})
     response = client.chat.completions.create(model="llama-3.3-70b-versatile",messages=messages,max_tokens=300)
     ai_response = response.choices[0].message.content
-    cursor.execute("INSERT INTO messages (ticket_id, role, content) VALUES (?, 'assistant', ?)",(ticket_id, ai_response))
+    cursor.execute(f"INSERT INTO messages (ticket_id, role, content) VALUES ({ph}, 'assistant', {ph})",(ticket_id, ai_response))
     conn.commit()
     conn.close()
     return jsonify({"response": ai_response})
@@ -109,7 +129,8 @@ Give concise, technical, actionable advice. Max 150 words."""}]
 def get_messages(ticket_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT role, content, created_at FROM messages WHERE ticket_id = ? ORDER BY created_at ASC",(ticket_id,))
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"SELECT role, content, created_at FROM messages WHERE ticket_id = {ph} ORDER BY created_at ASC",(ticket_id,))
     messages = [dict(row) for row in cursor.fetchall()]
     conn.close()
     return jsonify(messages)
@@ -118,7 +139,8 @@ def get_messages(ticket_id):
 def get_comments(ticket_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM comments WHERE ticket_id = ? ORDER BY created_at ASC",(ticket_id,))
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"SELECT * FROM comments WHERE ticket_id = {ph} ORDER BY created_at ASC",(ticket_id,))
     comments = [dict(row) for row in cursor.fetchall()]
     conn.close()
     return jsonify(comments)
@@ -128,7 +150,8 @@ def add_comment(ticket_id):
     data = request.get_json()
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO comments (ticket_id, author, content) VALUES (?, ?, ?)",(ticket_id, data.get("author","Ramon Valentin"), data["content"]))
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"INSERT INTO comments (ticket_id, author, content) VALUES ({ph}, {ph}, {ph})",(ticket_id, data.get("author","Ramon Valentin"), data["content"]))
     conn.commit()
     conn.close()
     return jsonify({"message": "Comment added"}), 201
@@ -142,7 +165,7 @@ def get_users():
                COUNT(t.id) as ticket_count
         FROM users u
         LEFT JOIN tickets t ON t.user_id = u.id
-        GROUP BY u.id
+        GROUP BY u.id, u.name, u.email, u.role, u.created_at
         ORDER BY u.created_at DESC
     """)
     users = [dict(row) for row in cursor.fetchall()]
@@ -154,12 +177,12 @@ def create_user():
     data = request.get_json()
     conn = get_connection()
     cursor = conn.cursor()
+    ph = '%s' if is_postgres() else '?'
     try:
-        cursor.execute("INSERT INTO users (name, email, role) VALUES (?, ?, ?)",(data["name"], data["email"], data.get("role","user")))
+        cursor.execute(f"INSERT INTO users (name, email, role) VALUES ({ph}, {ph}, {ph})",(data["name"], data["email"], data.get("role","user")))
         conn.commit()
-        user_id = cursor.lastrowid
         conn.close()
-        return jsonify({"id": user_id, "message": "User created"}), 201
+        return jsonify({"message": "User created"}), 201
     except Exception as e:
         conn.close()
         return jsonify({"error": str(e)}), 400
@@ -168,84 +191,61 @@ def create_user():
 def delete_user(user_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    ph = '%s' if is_postgres() else '?'
+    cursor.execute(f"DELETE FROM users WHERE id = {ph}", (user_id,))
     conn.commit()
     conn.close()
     return jsonify({"message": "User deleted"})
+
+@app.route("/api/dashboard", methods=["GET"])
+def get_dashboard():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) as total FROM tickets")
+    total = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='open'")
+    open_count = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='resolved'")
+    resolved = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='pending'")
+    pending = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='high'")
+    high = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='medium'")
+    medium = dict(cursor.fetchone())['total']
+    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='low'")
+    low = dict(cursor.fetchone())['total']
+    if is_postgres():
+        cursor.execute("SELECT category, COUNT(*) as count FROM tickets GROUP BY category ORDER BY count DESC")
+    else:
+        cursor.execute("SELECT category, COUNT(*) as count FROM tickets GROUP BY category ORDER BY count DESC")
+    by_category = [dict(row) for row in cursor.fetchall()]
+    cursor.execute("SELECT assigned_to, COUNT(*) as count FROM tickets GROUP BY assigned_to ORDER BY count DESC")
+    by_technician = [dict(row) for row in cursor.fetchall()]
+    if is_postgres():
+        cursor.execute("SELECT TO_CHAR(created_at, 'MM') as month, COUNT(*) as count FROM tickets GROUP BY month ORDER BY month")
+    else:
+        cursor.execute("SELECT strftime('%m', created_at) as month, COUNT(*) as count FROM tickets GROUP BY month ORDER BY month")
+    by_month = [dict(row) for row in cursor.fetchall()]
+    cursor.execute("""
+        SELECT t.id, t.title, t.status, t.priority, t.created_at, u.name as user_name
+        FROM tickets t LEFT JOIN users u ON t.user_id = u.id
+        ORDER BY t.created_at DESC LIMIT 5
+    """)
+    recent = [dict(row) for row in cursor.fetchall()]
+    conn.close()
+    return jsonify({
+        "total": total, "open": open_count, "resolved": resolved,
+        "pending": pending, "high": high, "medium": medium, "low": low,
+        "by_category": by_category, "by_technician": by_technician,
+        "by_month": by_month, "recent": recent
+    })
 
 @app.route("/seed")
 def run_seed():
     from seed import seed
     seed()
     return jsonify({"message": "Database seeded!"})
-
-@app.route("/api/dashboard", methods=["GET"])
-def get_dashboard():
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets")
-    total = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='open'")
-    open_count = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='resolved'")
-    resolved = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE status='pending'")
-    pending = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='high'")
-    high = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='medium'")
-    medium = cursor.fetchone()['total']
-
-    cursor.execute("SELECT COUNT(*) as total FROM tickets WHERE priority='low'")
-    low = cursor.fetchone()['total']
-
-    cursor.execute("""
-        SELECT category, COUNT(*) as count
-        FROM tickets GROUP BY category ORDER BY count DESC
-    """)
-    by_category = [dict(row) for row in cursor.fetchall()]
-
-    cursor.execute("""
-        SELECT assigned_to, COUNT(*) as count
-        FROM tickets GROUP BY assigned_to ORDER BY count DESC
-    """)
-    by_technician = [dict(row) for row in cursor.fetchall()]
-
-    cursor.execute("""
-        SELECT strftime('%m', created_at) as month, COUNT(*) as count
-        FROM tickets GROUP BY month ORDER BY month
-    """)
-    by_month = [dict(row) for row in cursor.fetchall()]
-
-    cursor.execute("""
-        SELECT t.id, t.title, t.status, t.priority, t.created_at,
-               u.name as user_name
-        FROM tickets t
-        LEFT JOIN users u ON t.user_id = u.id
-        ORDER BY t.created_at DESC LIMIT 5
-    """)
-    recent = [dict(row) for row in cursor.fetchall()]
-
-    conn.close()
-    return jsonify({
-        "total": total,
-        "open": open_count,
-        "resolved": resolved,
-        "pending": pending,
-        "high": high,
-        "medium": medium,
-        "low": low,
-        "by_category": by_category,
-        "by_technician": by_technician,
-        "by_month": by_month,
-        "recent": recent
-    })
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
